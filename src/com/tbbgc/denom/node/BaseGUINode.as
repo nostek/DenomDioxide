@@ -1,28 +1,28 @@
 package com.tbbgc.denom.node {
+	import com.tbbgc.denom.common.input.NodeInput;
+	import com.tbbgc.denom.common.interfaces.INode;
+	import com.tbbgc.denom.common.interfaces.INodeEvent;
+	import com.tbbgc.denom.common.models.AvailableNodes;
+	import com.tbbgc.denom.common.nodes.NoteNode;
+	import com.tbbgc.denom.common.nodes.conditional.OverLevelValueNode;
+	import com.tbbgc.denom.common.nodes.events.EventNode;
+	import com.tbbgc.denom.common.nodes.events.PostEventNode;
+	import com.tbbgc.denom.common.nodes.parameters.ParameterNode;
+	import com.tbbgc.denom.common.nodes.selectors.SelectRandomNode;
+	import com.tbbgc.denom.common.nodes.selectors.SelectRandomWeightNode;
+	import com.tbbgc.denom.common.nodes.selectors.SelectSwitchValueNode;
+	import com.tbbgc.denom.common.nodes.sound.AdvancedSoundNode;
+	import com.tbbgc.denom.common.nodes.sound.MusicNode;
+	import com.tbbgc.denom.common.nodes.sound.SoundNode;
+	import com.tbbgc.denom.common.nodes.values.BooleanNode;
+	import com.tbbgc.denom.common.nodes.values.GraphNode;
+	import com.tbbgc.denom.common.nodes.values.NumberNode;
+	import com.tbbgc.denom.common.nodes.values.TextNode;
+	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.dialogues.GraphDialogue;
 	import com.tbbgc.denom.dialogues.SliderDialogue;
-	import com.tbbgc.denom.input.NodeInput;
-	import com.tbbgc.denom.interfaces.INode;
-	import com.tbbgc.denom.interfaces.INodeEvent;
-	import com.tbbgc.denom.models.AvailableNodes;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.UI;
-	import com.tbbgc.denom.nodes.NoteNode;
-	import com.tbbgc.denom.nodes.conditional.OverLevelValueNode;
-	import com.tbbgc.denom.nodes.events.EventNode;
-	import com.tbbgc.denom.nodes.events.PostEventNode;
-	import com.tbbgc.denom.nodes.parameters.ParameterNode;
-	import com.tbbgc.denom.nodes.selectors.SelectRandomNode;
-	import com.tbbgc.denom.nodes.selectors.SelectRandomWeightNode;
-	import com.tbbgc.denom.nodes.selectors.SelectSwitchValueNode;
-	import com.tbbgc.denom.nodes.sound.AdvancedSoundNode;
-	import com.tbbgc.denom.nodes.sound.MusicNode;
-	import com.tbbgc.denom.nodes.sound.SoundNode;
-	import com.tbbgc.denom.nodes.values.BooleanNode;
-	import com.tbbgc.denom.nodes.values.GraphNode;
-	import com.tbbgc.denom.nodes.values.NumberNode;
-	import com.tbbgc.denom.nodes.values.TextNode;
-	import com.tbbgc.denom.parameters.NodeParameter;
 
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
@@ -515,7 +515,7 @@ package com.tbbgc.denom.node {
 
 
 
-import com.tbbgc.denom.input.NodeInput;
+import com.tbbgc.denom.common.input.NodeInput;
 import com.tbbgc.denom.models.UI;
 
 import flash.display.Shape;

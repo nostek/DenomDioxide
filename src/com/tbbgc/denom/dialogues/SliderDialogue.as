@@ -1,11 +1,12 @@
 package com.tbbgc.denom.dialogues {
-	import com.tbbgc.denom.interfaces.INodeParameter;
-	import com.tbbgc.denom.nodes.parameters.ParameterNode;
 	import fl.controls.Button;
 	import fl.controls.ScrollBar;
 	import fl.controls.ScrollBarDirection;
 	import fl.events.ComponentEvent;
 	import fl.events.ScrollEvent;
+
+	import com.tbbgc.denom.common.interfaces.INodeParameter;
+	import com.tbbgc.denom.common.nodes.parameters.ParameterNode;
 
 
 	/**

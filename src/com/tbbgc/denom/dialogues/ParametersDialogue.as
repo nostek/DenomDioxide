@@ -2,12 +2,12 @@ package com.tbbgc.denom.dialogues {
 	import fl.controls.List;
 	import fl.events.ListEvent;
 
-	import com.tbbgc.denom.interfaces.INode;
+	import com.tbbgc.denom.common.interfaces.INode;
+	import com.tbbgc.denom.common.nodes.NoteNode;
+	import com.tbbgc.denom.common.nodes.parameters.ParameterNode;
+	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.node.BaseNode;
-	import com.tbbgc.denom.nodes.NoteNode;
-	import com.tbbgc.denom.nodes.parameters.ParameterNode;
-	import com.tbbgc.denom.parameters.NodeParameter;
 
 
 	/**

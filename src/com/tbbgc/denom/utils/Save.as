@@ -1,9 +1,9 @@
 package com.tbbgc.denom.utils {
-	import com.tbbgc.denom.input.NodeInput;
+	import com.tbbgc.denom.common.input.NodeInput;
+	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.FlowModel;
 	import com.tbbgc.denom.node.BaseNode;
-	import com.tbbgc.denom.parameters.NodeParameter;
 
 	import flash.events.Event;
 	import flash.filesystem.File;

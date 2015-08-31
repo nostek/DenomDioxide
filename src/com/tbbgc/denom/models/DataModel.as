@@ -1,6 +1,7 @@
 package com.tbbgc.denom.models {
-	import com.tbbgc.denom.interfaces.INode;
-	import com.tbbgc.denom.parameters.NodeParameter;
+	import com.tbbgc.denom.common.interfaces.INode;
+	import com.tbbgc.denom.common.models.DenomShared;
+	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.utils.ValueSignal;
 
 	import org.osflash.signals.Signal;

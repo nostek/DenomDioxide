@@ -3,12 +3,12 @@ package com.tbbgc.denom.dialogues {
 	import fl.controls.List;
 	import fl.events.ListEvent;
 
+	import com.tbbgc.denom.common.nodes.sound.AdvancedSoundNode;
+	import com.tbbgc.denom.common.nodes.sound.MusicNode;
+	import com.tbbgc.denom.common.nodes.sound.SoundNode;
 	import com.tbbgc.denom.managers.SettingsManager;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.node.BaseNode;
-	import com.tbbgc.denom.nodes.sound.AdvancedSoundNode;
-	import com.tbbgc.denom.nodes.sound.MusicNode;
-	import com.tbbgc.denom.nodes.sound.SoundNode;
 
 	import flash.events.Event;
 	import flash.events.MouseEvent;

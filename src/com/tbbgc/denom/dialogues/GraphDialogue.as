@@ -1,8 +1,10 @@
 package com.tbbgc.denom.dialogues {
-	import com.tbbgc.denom.models.DataModel;
-	import com.tbbgc.denom.nodes.values.GraphNode;
 	import fl.controls.Button;
 	import fl.events.ComponentEvent;
+
+	import com.tbbgc.denom.common.nodes.values.GraphNode;
+	import com.tbbgc.denom.models.DataModel;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
