@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="denom" basedir="../" default="build">
+
+  <property name="FLEX_HOME" location="/Applications/FDT/sdks/flex_sdk_4_6_air_3_5" />
+  <property name="deploy.dir" location="bin"/>
+  <property name="src.dir" location="src" />
+  <property name="srcdb.dir" location="srcdb" />
+  <property name="srcbase.dir" location="srcbase" />
+  <property name="temp.dir" location="tmp" />
+
+  <property name="cbbase.dir" location="/Users/simonrodriguez/Workspace/codebase" />
+
+  <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+	<target name="build_init">
+		<mkdir dir="${deploy.dir}"/>
+		<mkdir dir="${temp.dir}"/>
+
+        <copy file="${cbbase.dir}/lib/StardollNatExt.ane" tofile="${temp.dir}/StardollNatExt.swc" />
+        <copy file="${cbbase.dir}/lib/Facebook.ane" tofile="${temp.dir}/Facebook.swc" />
+        <copy file="${cbbase.dir}/lib/NativeGATracker.ane" tofile="${temp.dir}/NativeGATracker.swc" />
+        <copy file="${cbbase.dir}/lib/com.kochava.extensions.Kochava.ane" tofile="${temp.dir}/com.kochava.extensions.Kochava.swc" />
+        <copy file="${cbbase.dir}/lib/com.milkmangames.extensions.AdMob.ane" tofile="${temp.dir}/com.milkmangames.extensions.AdMob.swc" />
+	</target>
+
+
+  <target name="build" depends="build_init" description="Builds the library (.swc file)">
+    <compc output="${deploy.dir}/codebase.swc">
+      <load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+
+      <include-sources dir="${cbbase.dir}/src" includes="*"/>
+      <include-sources dir="${cbbase.dir}/src_starling" includes="*"/>
+        <include-sources dir="${srcdb.dir}" includes="*"/>
+        <include-sources dir="${srcbase.dir}" includes="*"/>
+
+      <external-library-path file="${cbbase.dir}/lib/*.swc" append="true">
+      	<exclude name="**/codebase.swc" />
+      </external-library-path>
+      <external-library-path file="${temp.dir}/*.swc" append="true"/>
+
+      <arg value="-swf-version=18" />
+    </compc>
+  </target>
+
+</project>
