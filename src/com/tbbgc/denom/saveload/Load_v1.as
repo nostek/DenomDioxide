@@ -1,73 +1,16 @@
-package com.tbbgc.denom.utils {
+package com.tbbgc.denom.saveload {
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.models.AvailableNodes;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
-	import com.tbbgc.denom.managers.SettingsManager;
 	import com.tbbgc.denom.models.FlowModel;
 	import com.tbbgc.denom.node.BaseNode;
 
-	import flash.events.Event;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-	import flash.net.FileFilter;
 	import flash.utils.getQualifiedClassName;
 	/**
-	 * @author simonrodriguez
+	 * @author Simon
 	 */
-	public class Load {
-		private static var _lastUsedFile:File;
-
-		private static var _onComplete:Function;
-		private static var _onPreLoad:Function;
-
-		public static function get lastUsedFile():File { return _lastUsedFile; }
-
-		public static function runFirst( onPreLoad:Function, onComplete:Function ):void {
-			if( SettingsManager.haveItem( SettingsManager.SETTINGS_JSON) ) {
-				_onPreLoad = onPreLoad;
-				_onComplete = onComplete;
-
-				var path:String = SettingsManager.getItem( SettingsManager.SETTINGS_JSON ) as String;
-
-				onFileSelect( null, path );
-			}
-		}
-
-		public static function run( onPreLoad:Function, onComplete:Function ):void {
-			_onPreLoad = onPreLoad;
-			_onComplete = onComplete;
-
-			var jsons:FileFilter = new FileFilter("Json", "*.json");
-			var f:File = new File();
-			f.addEventListener(Event.SELECT, onFileSelect);
-			f.browseForOpen("Open denom flow", [jsons]);
-		}
-
-		private static function onFileSelect( e:Event, path:String=null ):void {
-			_onPreLoad();
-
-			var f:File;
-
-			if( path != null ) {
-				f = new File( path );
-			} else {
-				f = e.target as File;
-			}
-
-			var stream:FileStream = new FileStream();
-			stream.open(f, FileMode.READ);
-			var json:String = stream.readUTFBytes(stream.bytesAvailable);
-			stream.close();
-
-			load( JSON.parse(json) );
-
-			SettingsManager.setItem( SettingsManager.SETTINGS_JSON, f.nativePath );
-
-			_lastUsedFile = f;
-		}
-
-		private static function load( data:Object ):void {
+	public class Load_v1 {
+		public static function run(data:Object):Vector.<FlowModel> {
 			var flows:Vector.<FlowModel> = new Vector.<FlowModel>();
 
 			var views:Array = data["views"];
@@ -103,10 +46,10 @@ package com.tbbgc.denom.utils {
 
 				flows.push( flow );
 			}
-
-			_onComplete( flows );
+			
+			return flows;
 		}
-
+		
 		private static function loadInputs( node:BaseNode, data:Object, nodes:Vector.<BaseNode> ):void {
 			var name:String, cname:String;
 			var input:NodeInput, cinput:NodeInput;;

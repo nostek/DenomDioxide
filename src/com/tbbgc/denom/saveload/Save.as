@@ -1,4 +1,4 @@
-package com.tbbgc.denom.utils {
+package com.tbbgc.denom.saveload {
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.models.DataModel;
@@ -15,6 +15,7 @@ package com.tbbgc.denom.utils {
 	 */
 	public class Save {
 		private static var _flows:Vector.<FlowModel>;
+		private static var _strings:Array;
 
 		public static function run( lastFile:File ):void {
 			if( lastFile != null ) {
@@ -30,17 +31,23 @@ package com.tbbgc.denom.utils {
 			var f:File = (last!=null) ? last : e.target as File;
 
 			_flows = new Vector.<FlowModel>();
+			_strings = [];
 
 			DataModel.RUN_SAVE.dispatch( add );
 
 			save( f );
 
 			_flows = null;
+			_strings = null;
 		}
 
 		private static function add( node:BaseNode ):void {
-			for each( var flow:FlowModel in _flows ) {
-				if( flow.name == node.parent.name ) {
+			var flow:FlowModel;
+			
+			const len:int = _flows.length;
+			for (var i:int = 0; i < len; i++) {
+				flow = _flows[i];
+				if (flow.name == node.parent.name) {
 					flow.nodes.splice(0, 0, node);
 					return;
 				}
@@ -49,7 +56,6 @@ package com.tbbgc.denom.utils {
 			flow = new FlowModel();
 			flow.name = node.parent.name;
 			flow.nodes = new Vector.<BaseNode>();
-
 			flow.nodes.push( node );
 
 			_flows.splice(0, 0, flow);
@@ -58,40 +64,60 @@ package com.tbbgc.denom.utils {
 		private static function save( f:File ):void {
 			var views:Array = [];
 
+			var flow:FlowModel;
+			var node:BaseNode;
 			var nodes:Array;
-
-			for each( var flow:FlowModel in _flows ) {
+			var blen:int;
+			var o:Object;
+			var inputs:Array;
+			var params:Object;
+			
+			const len:int = _flows.length;
+			for (var i:int = 0; i < len; i++) {
+				flow = _flows[i];
+				
 				nodes = [];
 
-				if( flow.nodes.length > 0 ) {
-					for each( var node:BaseNode in flow.nodes ) {
-						nodes.push( {
-							index: getIndex(flow, node),
-
-							id: nodeName(node),
-
-							x: node.x,
-							y: node.y,
-
-							inputs: saveInputs(flow, node),
-
-							params: saveParameters(node)
-						} );
+				blen = flow.nodes.length;
+				
+				if( blen > 0 ) {
+					for (var b:int = 0; b < blen; b++) {
+						node = flow.nodes[b];
+						
+						o = {};
+						o[SLKeys.NODE_ID] = packString(nodeName(node));
+						o[SLKeys.NODE_X] = node.x;
+						o[SLKeys.NODE_Y] = node.y; 
+						
+						inputs = saveInputs(flow, node);
+						if (inputs != null) {
+							o[SLKeys.NODE_INPUTS] = inputs;
+						}
+						
+						params = saveParameters(node);
+						if (params != null) {
+							o[SLKeys.NODE_PARAMS] = params;
+						}
+						
+						nodes.push( o );
 					}
 
-					views.push( { name: flow.name, nodes:nodes } );
+					o = {};
+					o[SLKeys.FLOW_NAME] = packString(flow.name);
+					o[SLKeys.FLOW_NODES] = nodes; 
+					views.push(o);
 				}
 			}
 
-			var json:String = JSON.stringify( {
-				version: 1,
-				views: views,
-				random: getRandomCharacters()
-			} );
+			o = {};
+			o[SLKeys.MAIN_VERSION] 	= 2;
+			o[SLKeys.MAIN_VIEWS] 	= views;
+			o[SLKeys.MAIN_STRINGS] 	= _strings;
+			o[SLKeys.MAIN_RANDOM]	= getRandomCharacters();
 
 			var stream:FileStream = new FileStream();
 			stream.open( f, FileMode.WRITE);
-			stream.writeUTFBytes(json);
+			stream.writeUTFBytes(JSON.stringify(o));
 			stream.close();
 		}
 
@@ -99,23 +125,28 @@ package com.tbbgc.denom.utils {
 			var a:Array = [];
 
 			var c:Array;
+			var o:Object;
 
 			for each( var input:NodeInput in node.getRight() ) {
 				if( input.connections.length > 0 ) {
 					c = [];
 
 					for each( var conn:NodeInput in input.connections ) {
-						c.push( {
-							index: getIndex( flow, conn.owner as BaseNode ),
-							name: conn.name
-						} );
+						o = {};
+						o[SLKeys.CONNECTION_NAME] = packString(conn.name);
+						o[SLKeys.CONNECTION_INDEX] = getIndex( flow, conn.owner as BaseNode );  
+						c.push(o);
 					}
 
-					a.push( {
-						name: input.name,
-						connections: c
-					} );
+					o = {};
+					o[SLKeys.INPUT_NAME] = packString(input.name);
+					o[SLKeys.INPUT_CONNECTIONS] = c; 
+					a.push(o);
 				}
+			}
+			
+			if (a.length == 0) {
+				return null;
 			}
 
 			return a;
@@ -123,9 +154,15 @@ package com.tbbgc.denom.utils {
 
 		private static function saveParameters( node:BaseNode ):Object {
 			var o:Object = {};
+			var c:Boolean = false;
 
 			for each( var param:NodeParameter in node.getParameters() ) {
-				o[ param.name ] = param.value;
+				o[ packString(param.name) ] = packString(param.value);
+				c = true;
+			}
+			
+			if (!c) {
+				return null;
 			}
 
 			return o;
@@ -154,6 +191,19 @@ package com.tbbgc.denom.utils {
 				r += String.fromCharCode( int(65 + ((90-65)*Math.random())) );
 			}
 			return r;
+		}
+		
+		private static function packString( s:* ):int {
+			const len:int = _strings.length;
+			for (var i:int = 0; i < len; i++) {
+				if( _strings[i] == s) {
+					return i;
+				}
+			}
+			
+			_strings.push(s);
+			
+			return _strings.length-1;
 		}
 	}
 }
