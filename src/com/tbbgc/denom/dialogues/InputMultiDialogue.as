@@ -2,7 +2,7 @@ package com.tbbgc.denom.dialogues {
 	import fl.controls.Button;
 	import fl.controls.TextArea;
 
-	import org.osflash.signals.Signal;
+	import org.osflash.signals.OnceSignal;
 
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -16,7 +16,7 @@ package com.tbbgc.denom.dialogues {
 	 * @author simonrodriguez
 	 */
 	public class InputMultiDialogue extends BaseDialogue {
-		private var _onOK:Signal;
+		private var _onOK:OnceSignal;
 
 		private var _label:TextField;
 		private var _button:Button;
@@ -48,7 +48,7 @@ package com.tbbgc.denom.dialogues {
 			_input.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			container.addChild(_input);
 
-			_onOK = new Signal( String );
+			_onOK = new OnceSignal( String );
 
 			init(WIDTH, HEIGHT);
 
@@ -76,7 +76,7 @@ package com.tbbgc.denom.dialogues {
 			super.close();
 		}
 
-		public function get onOK():Signal { return _onOK; }
+		public function get onOK():OnceSignal { return _onOK; }
 
 		private function onButton(e:MouseEvent):void {
 			_onOK.dispatch( _input.text );
