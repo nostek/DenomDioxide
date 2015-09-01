@@ -4,8 +4,6 @@ package com.tbbgc.denom.common.nodes.events {
 	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.node.BaseNode;
 
-	import org.osflash.signals.Signal;
-
 	/**
 	 * @author simonrodriguez
 	 */
@@ -15,10 +13,6 @@ package com.tbbgc.denom.common.nodes.events {
 		private var _values:NodeInput;
 
 		private var _id:NodeParameter;
-
-		///
-
-		private var _event:Signal;
 
 		public function PostEventNode() {
 			_run = new NodeInput(this, "RUN", onRun);
@@ -40,23 +34,19 @@ package com.tbbgc.denom.common.nodes.events {
 			return "POST EVENT";
 		}
 
-		public function set signal(signal:Signal):void { _event = signal; }
-
 		/////////////////////
 
 		private function onRun(...args):* {
-			if( _event != null ) {
-				var data:Array = [];
+			var data:Array = [];
 
-				const connections:Vector.<NodeInput> = _values.connections;
+			const connections:Vector.<NodeInput> = _values.connections;
 
-				const len:int = connections.length;
-				for (var i:int = 0; i < len; i++) {
-					data.push( connections[i].run() );
-				}
-
-				_event.dispatch( _id.value as String, data );
+			const len:int = connections.length;
+			for (var i:int = 0; i < len; i++) {
+				data.push( connections[i].run() );
 			}
+
+			this.shared.onPostEvent.dispatch( _id.value as String, data );
 		}
 	}
 }

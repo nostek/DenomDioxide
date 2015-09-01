@@ -9,6 +9,8 @@ package com.tbbgc.denom.common.models {
 	 */
 	public class DenomShared {
 		private var _onEnterFrame:Signal;
+		
+		private var _onPostEvent:Signal;
 
 		private var _fileManager:DenomFileManager;
 		
@@ -20,11 +22,17 @@ package com.tbbgc.denom.common.models {
 			_fileManager = fileManager;
 			_globalParameters = globalParameters;
 			
+			_onPostEvent = new Signal(String, Array);
+			
 			_parameters = new Dictionary();
 		}
 
 		public function get onEnterFrame():Signal {
 			return _onEnterFrame;
+		}
+		
+		public function get onPostEvent():Signal {
+			return _onPostEvent;
 		}
 
 		public function get fileManager():DenomFileManager {
