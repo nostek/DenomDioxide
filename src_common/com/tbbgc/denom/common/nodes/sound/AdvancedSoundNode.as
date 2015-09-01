@@ -71,21 +71,19 @@ package com.tbbgc.denom.common.nodes.sound {
 
 			if( url == null || url == "" ) return;
 
-			shared.incLoad();
+			this.shared.incLoad();
 
-			shared.fileManager.onLoad.add( onFileLoaded );
-			shared.fileManager.getFile( url );
+			this.shared.fileManager.onLoad.add( onFileLoaded );
+			this.shared.fileManager.getFile( url );
 		}
 
 		private function onFileLoaded( file:String, ba:ByteArray ):void {
 			const url:String = _url.value as String;
 
 			if( file == url ) {
-				shared.fileManager.onLoad.remove( onFileLoaded );
+				this.shared.fileManager.onLoad.remove( onFileLoaded );
 
-				shared.decLoad();
-
-				var data:Array;
+				var data:Array = null;
 
 				const fileending:String = url.substr( url.length-4 ).toLowerCase();
 
@@ -97,20 +95,16 @@ package com.tbbgc.denom.common.nodes.sound {
 					case ".mp3":
 						data = SoundMp3Parser.parse(ba);
 					break;
-
-					default:
-						this.logText("Invalid file: " + file);
-						_url.value = "";
-					return;
 				}
 
-				if( data == null ) {
+				if( data != null ) {
+					_sound = new DenomSoundAdvanced(data[0], data[1]);					
+				} else {
 					this.logText("Could not load file: " + file);
 					_url.value = "";
-					return;
 				}
-
-				_sound = new DenomSoundAdvanced(data[0], data[1]);
+				
+				this.shared.decLoad();
 			}
 		}
 	}

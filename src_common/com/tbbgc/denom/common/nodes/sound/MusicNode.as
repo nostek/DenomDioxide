@@ -70,7 +70,7 @@ package com.tbbgc.denom.common.nodes.sound {
 
 			const buffer:int = _buffer.value as int;
 
-			_music = new DenomMusic( shared.fileManager.getFullURL(url), buffer > 0 ? buffer : 1000 );
+			_music = new DenomMusic( this.shared.fileManager.getFullURL(url), buffer > 0 ? buffer : 1000 );
 		}
 	}
 }

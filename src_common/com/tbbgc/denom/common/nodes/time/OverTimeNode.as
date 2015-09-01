@@ -59,7 +59,7 @@ package com.tbbgc.denom.common.nodes.time {
 
 		private function onStart(...args):* {
 			if( _timer == 0 ) {
-				shared.onEnterFrame.add(onUpdate);
+				this.shared.onEnterFrame.add(onUpdate);
 			}
 
 			_timer = getTimer();
@@ -69,7 +69,7 @@ package com.tbbgc.denom.common.nodes.time {
 			if( _timer != 0 ) {
 				_timer = 0;
 
-				shared.onEnterFrame.remove(onUpdate);
+				this.shared.onEnterFrame.remove(onUpdate);
 			}
 		}
 

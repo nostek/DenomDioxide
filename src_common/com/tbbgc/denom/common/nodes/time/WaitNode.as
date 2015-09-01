@@ -54,14 +54,14 @@ package com.tbbgc.denom.common.nodes.time {
 		private function onStart(...args):* {
 			_timer = getTimer() + _time.runFirst() as Number;
 
-			shared.onEnterFrame.add( onUpdate );
+			this.shared.onEnterFrame.add( onUpdate );
 		}
 
 		private function onStop(...args):* {
 			if( _timer != 0 ) {
 				_timer = 0;
 
-				shared.onEnterFrame.remove( onUpdate );
+				this.shared.onEnterFrame.remove( onUpdate );
 			}
 		}
 
@@ -69,7 +69,7 @@ package com.tbbgc.denom.common.nodes.time {
 			if( getTimer() >= _timer ) {
 				_timer = 0;
 
-				shared.onEnterFrame.remove( onUpdate );
+				this.shared.onEnterFrame.remove( onUpdate );
 
 				_onDone.runConnections();
 			} else {

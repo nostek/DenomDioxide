@@ -71,17 +71,17 @@ package com.tbbgc.denom.common.nodes.sound {
 
 			if( url == null || url == "" ) return;
 
-			shared.incLoad();
+			this.shared.incLoad();
 
-			shared.fileManager.onLoad.add( onFileLoaded );
-			shared.fileManager.getFile( url );
+			this.shared.fileManager.onLoad.add( onFileLoaded );
+			this.shared.fileManager.getFile( url );
 		}
 
 		private function onFileLoaded( file:String, ba:ByteArray ):void {
 			const url:String = _url.value as String;
 
 			if( file == url ) {
-				shared.fileManager.onLoad.remove( onFileLoaded );
+				this.shared.fileManager.onLoad.remove( onFileLoaded );
 
 				const fileending:String = url.substr( url.length-4 ).toLowerCase();
 
@@ -105,10 +105,9 @@ package com.tbbgc.denom.common.nodes.sound {
 					default:
 						this.logText("Invalid file: " + file);
 						_url.value = "";
-					return;
 				}
 
-				shared.decLoad();
+				this.shared.decLoad();
 			}
 		}
 	}
