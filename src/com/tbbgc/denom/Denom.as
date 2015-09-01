@@ -75,11 +75,14 @@ package com.tbbgc.denom {
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import flash.ui.Keyboard;
+	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 
 
 
 	public class Denom extends Sprite {
+		public static const IS_EDITOR:Boolean = true;
+		
 		private var _menu:ContextMenu;
 		private var _menuPosition:Point;
 
@@ -108,7 +111,7 @@ package com.tbbgc.denom {
 
 			new SettingsManager();
 
-			DataModel.shared = new DenomShared(DataModel.ENTER_FRAME, new DenomFileManager());
+			DataModel.shared = new DenomShared(DataModel.ENTER_FRAME, new DenomFileManager(), new Dictionary());
 
 			DataModel.DRAW_LINE.add( onDrawLine );
 

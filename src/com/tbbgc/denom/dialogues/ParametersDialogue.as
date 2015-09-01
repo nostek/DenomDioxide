@@ -78,9 +78,9 @@ package com.tbbgc.denom.dialogues {
 					return;
 				}
 
-				if( _selectedNode is ParameterNode ) {
+				if( _selectedNode is ParameterNode && _selectedParameter.name == "VALUE" ) {
 					dlg = new InputDialogue("Edit parameter", _selectedParameter.name+":", _selectedParameter.value);
-					dlg.onOK.addOnce( onEditText );
+					dlg.onOK.addOnce( onEditTextEvaluate );
 					return;
 				}
 
@@ -100,6 +100,25 @@ package com.tbbgc.denom.dialogues {
 					return;
 				}
 			}
+		}
+
+		private function onEditTextEvaluate( text:String ):void {
+			//true
+			//false
+			//number
+			//text
+			
+			if (text == "true") {
+				_selectedNode.setParameter(_selectedParameter.name, true);	
+			} else if (text == "false") {
+				_selectedNode.setParameter(_selectedParameter.name, false);
+			} else if (!isNaN(Number(text))) {
+				_selectedNode.setParameter(_selectedParameter.name, Number(text));
+			} else {
+				_selectedNode.setParameter(_selectedParameter.name, text);
+			}
+			
+			buildList();
 		}
 
 		private function onEditText( text:String ):void {

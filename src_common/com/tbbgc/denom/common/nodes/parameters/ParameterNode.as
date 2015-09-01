@@ -1,4 +1,5 @@
 package com.tbbgc.denom.common.nodes.parameters {
+	import com.tbbgc.denom.Denom;
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.interfaces.INode;
 	import com.tbbgc.denom.common.interfaces.INodeParameter;
@@ -11,24 +12,22 @@ package com.tbbgc.denom.common.nodes.parameters {
 	public class ParameterNode extends BaseNode implements INode, INodeParameter {
 		private var _get:NodeInput;
 
-		private var _onChanged:NodeInput;
-
 		private var _name:NodeParameter;
 		private var _value:NodeParameter;
+		private var _global:NodeParameter;
 
 		public function ParameterNode() {
 			_get = new NodeInput(this, "GET", onGet);
 
-			_onChanged = new NodeInput(this, "ON_CHANGED", null);
-
 			_name = new NodeParameter("NAME", "undefined");
-			_value = new NodeParameter("VALUE", 0, onChange);
+			_value = new NodeParameter("VALUE", 0);
+			_global = new NodeParameter("GLOBAL", false);
 
 			left( _get );
 
-			right( _onChanged );
+			right();
 
-			parameters( _value, _name );
+			parameters( _value, _name, _global );
 
 			super();
 		}
@@ -38,11 +37,10 @@ package com.tbbgc.denom.common.nodes.parameters {
 		}
 
 		private function onGet(...args):* {
+			if (!Denom.IS_EDITOR) {
+				return this.shared.getParameter( _name.value, _global.value as Boolean );
+			}
 			return _value.value;
-		}
-
-		private function onChange():void {
-			_onChanged.runConnections();
 		}
 
 		public function get parameterName() : String {
@@ -50,6 +48,9 @@ package com.tbbgc.denom.common.nodes.parameters {
 		}
 
 		public function set parameter(value : *) : void {
+			if (!Denom.IS_EDITOR) {
+				this.shared.setParameter( _name.value, _global.value as Boolean, value );
+			}
 			_value.value = value;
 		}
 
