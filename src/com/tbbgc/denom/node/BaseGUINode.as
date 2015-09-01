@@ -136,7 +136,6 @@ package com.tbbgc.denom.node {
 			DataModel.SELECTED_NODE.onChanged.add( onSelectedNode );
 			DataModel.DRAW_LINES.add( updateLines );
 			DataModel.DELETE_ALL.add( onDelete );
-
 			DataModel.DRAW.add( draw );
 		}
 
@@ -500,7 +499,6 @@ package com.tbbgc.denom.node {
 			DataModel.SELECTED_NODE.onChanged.remove( onSelectedNode );
 			DataModel.DRAW_LINES.remove( updateLines );
 			DataModel.DELETE_ALL.remove( onDelete );
-
 			DataModel.DRAW.remove( draw );
 
 			DataModel.DRAW_LINES.dispatch();
