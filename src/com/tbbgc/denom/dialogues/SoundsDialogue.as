@@ -25,36 +25,33 @@ package com.tbbgc.denom.dialogues {
 		public function SoundsDialogue() {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 450;
+			
+			super("Sounds", true, false, true, true);
 
 			_list = new List();
 			_list.allowMultipleSelection = false;
 			_list.componentInspectorSetting = true;
 			_list.addEventListener(ListEvent.ITEM_DOUBLE_CLICK, onEditParameter);
-			addChild( _list );
+			container.addChild( _list );
 
 			_folder = new Button();
 			_folder.label = "Select Folder";
 			_folder.addEventListener(MouseEvent.CLICK, onFolderClick);
-			addChild( _folder );
-
-			super(WIDTH, HEIGHT, "Sounds", true, false, true);
+			container.addChild( _folder );
+			
+			init( WIDTH, HEIGHT, 20, 40, false );
 
 			DataModel.ON_FIRST_RUN.add( onFirst );
-
-			this.x = 20;
-			this.y = 40;
 		}
+		
+		override protected function get dialogueID():String { return SettingsManager.SETTINGS_SOUNDS_DLG; }
 
-		override protected function resize( width:int, height:int ):void {
-			_folder.width = width - 20;
-			_folder.x = 10;
-			_folder.y = height - BaseDialogue.EDGE - _folder.height;
+		override protected function onResize( width:int, height:int ):void {
+			_list.width = width;
+			_list.height = height - 10 - _folder.height;
 
-			_list.x = _list.y = 10;
-			_list.width = width - 20;
-			_list.height = _folder.y - 20;
-
-			super.resize(width, height);
+			_folder.width = width;
+			_folder.y = _list.y + _list.height + 10;
 		}
 
 		private function onFirst():void {

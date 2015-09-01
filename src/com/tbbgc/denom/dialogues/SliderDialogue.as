@@ -1,8 +1,6 @@
 package com.tbbgc.denom.dialogues {
-	import fl.controls.Button;
 	import fl.controls.ScrollBar;
 	import fl.controls.ScrollBarDirection;
-	import fl.events.ComponentEvent;
 	import fl.events.ScrollEvent;
 
 	import com.tbbgc.denom.common.interfaces.INodeParameter;
@@ -17,11 +15,11 @@ package com.tbbgc.denom.dialogues {
 
 		private var _slider:ScrollBar;
 
-		private var _close:Button;
-
 		public function SliderDialogue( node:ParameterNode, x:Number, y:Number ) {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 70;
+			
+			super("Slider [" + (node as INodeParameter).parameterName + "]", true, false, true, true);
 
 			_node = node;
 
@@ -31,15 +29,9 @@ package com.tbbgc.denom.dialogues {
 			_slider.minScrollPosition = 0;
 			_slider.maxScrollPosition = 10000;
 			_slider.scrollPosition = 0;
-			addChild(_slider);
+			container.addChild(_slider);
 
-			_close = new Button();
-			_close.label = "Close";
-			_close.height = BaseDialogue.EDGE;
-			_close.addEventListener(ComponentEvent.BUTTON_DOWN, onClose);
-			addChild(_close);
-
-			super(WIDTH, HEIGHT, "Slider [" + (node as INodeParameter).parameterName + "]", true, false, true);
+			init(WIDTH, HEIGHT);
 
 			this.x = x;
 			this.y = y;
@@ -47,20 +39,10 @@ package com.tbbgc.denom.dialogues {
 			_slider.scrollPosition = 10000 * node.getParameter(null);
 		}
 
-		override protected function resize( width:int, height:int ):void {
-			_slider.x = _slider.y = 10;
-			_slider.width = width - 20;
-
-			_close.x = 10;
-			_close.y = height - _close.height;
-
-			super.resize(width, height);
+		override protected function onResize( width:int, height:int ):void {
+			_slider.width = width;
 		}
-
-		private function onClose(e:ComponentEvent):void {
-			close();
-		}
-
+		
 		private function onScroll(e:ScrollEvent):void {
 			_node.setParameter(null, _slider.scrollPosition / 10000);
 		}

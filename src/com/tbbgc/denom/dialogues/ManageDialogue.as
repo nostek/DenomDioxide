@@ -3,77 +3,73 @@ package com.tbbgc.denom.dialogues {
 	import fl.controls.List;
 	import fl.events.ComponentEvent;
 
-	import org.osflash.signals.Signal;
+	import org.osflash.signals.OnceSignal;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 
 	/**
 	 * @author simonrodriguez
 	 */
 	public class ManageDialogue extends BaseDialogue {
-		private var _container:Sprite;
+		private var _flowcontainer:Sprite;
 
-		private var _onClose:Signal;
+		private var _onClose:OnceSignal;
 
+		private var _rename:Button;
+		private var _delete:Button;
 		private var _list:List;
 
-		public function ManageDialogue( container:Sprite ) {
+		public function ManageDialogue( flowcontainer:Sprite ) {
 			const WIDTH:int = 400;
 			const HEIGHT:int = 500;
+			
+			super("Manage", false, true, false, false);
 
-			_container = container;
+			_flowcontainer = flowcontainer;
 
-			var button:Button = new Button();
-			button.label = "Close";
-			button.x = WIDTH/2 - button.width/2;
-			button.y = HEIGHT - (button.height + 10);
-			button.addEventListener(MouseEvent.CLICK, onButtonClose);
-			addChild(button);
+			_onClose = new OnceSignal();
 
-			var rename:Button = new Button();
-			rename.label = "Rename";
-			rename.x = WIDTH - 10 - rename.width;
-			rename.y = 10;
-			rename.addEventListener(ComponentEvent.BUTTON_DOWN, onRename);
-			addChild(rename);
+			_rename = new Button();
+			_rename.label = "Rename";
+			_rename.addEventListener(ComponentEvent.BUTTON_DOWN, onRename);
+			container.addChild(_rename);
 
-			var del:Button = new Button();
-			del.label = "Delete";
-			del.x = rename.x;
-			del.y = rename.y + rename.height + 10;
-			del.addEventListener(ComponentEvent.BUTTON_DOWN, onDelete);
-			addChild(del);
+			_delete = new Button();
+			_delete.label = "Delete";
+			_delete.addEventListener(ComponentEvent.BUTTON_DOWN, onDelete);
+			container.addChild(_delete);
 
 			_list = new List();
-			_list.x = 10;
-			_list.y = 10;
-			_list.width = rename.x - 20;
-			_list.height = HEIGHT - 30 - rename.height;
-			addChild(_list);
+			container.addChild(_list);
+
+			init(WIDTH, HEIGHT);
 
 			buildList();
-
-			super(WIDTH, HEIGHT, "Manage Flows", false, true, false);
-
-			_onClose = new Signal();
 		}
+		
+		override protected function onResize( width:int, height:int ):void {
+			_rename.x = width - _rename.width;
 
-		public function get onClose():Signal { return _onClose; }
-
-		private function onButtonClose(e:MouseEvent):void {
+			_list.y = _rename.y + _rename.height + 10;
+			_list.width = width;
+			_list.height = height - _list.y;
+		}
+		
+		override protected function close():void {
 			_onClose.dispatch();
-
-			close();
+			
+			super.close();
 		}
+
+		public function get onClose():OnceSignal { return _onClose; }
 
 		private function buildList():void {
 			_list.removeAll();
 
-			const len:int = _container.numChildren;
+			const len:int = _flowcontainer.numChildren;
 			for( var i:int = 0; i < len; i++ ) {
-				_list.addItem({label: _container.getChildAt(i).name});
+				_list.addItem({label: _flowcontainer.getChildAt(i).name});
 			}
 		}
 
@@ -81,7 +77,7 @@ package com.tbbgc.denom.dialogues {
 			if( _list.selectedIndex >= 0 ) {
 				const name:String = _list.selectedItem["label"];
 
-				var d:DisplayObject = _container.getChildByName( name );
+				var d:DisplayObject = _flowcontainer.getChildByName( name );
 				if( d != null ) {
 					var dlg:InputDialogue = new InputDialogue("Rename Flow", "Enter name:", d.name);
 					dlg.onOK.addOnce( onRenameFlow );
@@ -91,7 +87,7 @@ package com.tbbgc.denom.dialogues {
 
 		private function onRenameFlow( text:String ):void {
 			const name:String = _list.selectedItem["label"];
-			var d:DisplayObject = _container.getChildByName( name );
+			var d:DisplayObject = _flowcontainer.getChildByName( name );
 
 			d.name = text;
 
@@ -102,9 +98,9 @@ package com.tbbgc.denom.dialogues {
 			if( _list.selectedIndex >= 0 ) {
 				const name:String = _list.selectedItem["label"];
 
-				var d:DisplayObject = _container.getChildByName( name );
+				var d:DisplayObject = _flowcontainer.getChildByName( name );
 				if( d != null ) {
-					_container.removeChild( d );
+					_flowcontainer.removeChild( d );
 				}
 			}
 

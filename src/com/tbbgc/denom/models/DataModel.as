@@ -6,14 +6,11 @@ package com.tbbgc.denom.models {
 
 	import org.osflash.signals.Signal;
 
-	import flash.display.Sprite;
 	import flash.geom.Point;
 	/**
 	 * @author simonrodriguez
 	 */
 	public class DataModel {
-		public static var dialogues:Sprite;
-
 		public static var shared:DenomShared;
 
 		public static var ENTER_FRAME:Signal = new Signal();

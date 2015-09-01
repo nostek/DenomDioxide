@@ -1,5 +1,6 @@
 package com.tbbgc.denom.dialogues {
-	import com.tbbgc.denom.models.DataModel;
+	import com.tbbgc.denom.managers.SettingsManager;
+	import com.tbbgc.denom.utils.ObjectEx;
 
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -13,32 +14,63 @@ package com.tbbgc.denom.dialogues {
 	 * @author simonrodriguez
 	 */
 	public class BaseDialogue extends Sprite {
+		public static var DIALOGUES:Sprite;
+
+		public static var BLOCK_MENU_COUNT:int=0;
+
+		public static function get BLOCK_MENU():Boolean { return BLOCK_MENU_COUNT > 0; }
+
+		public static const HEADER:int 	= 20;
+		public static const EDGE:int 	= 10;
+
+		private var _realWidth:int;
+		private var _realHeight:int;
+
 		private var _noclick:Sprite;
 		private var _topic:TextField;
 
-		public static const HEADER:int = 20;
+		private var _graphics:Sprite;
+		private var _container:Sprite;
 
-		public static const EDGE:int = 30;
+		private var _canClose:Boolean;
 
 		private var _canScale:Boolean;
 		private var _doScale:Boolean;
 		private var _sx:Number;
 		private var _sy:Number;
+		private var _bw:Number;
+		private var _bh:Number;
 
-		public function BaseDialogue( width:int, height:int, caption:String, canMinimize:Boolean=true, disableStage:Boolean=true, canScale:Boolean=true ) {
-			var stage:Stage = DataModel.dialogues.stage;
+		public function BaseDialogue( caption:String, canMinimize:Boolean, disableStage:Boolean, canScale:Boolean, canClose:Boolean ) {
+			super();
 
 			if( disableStage ) {
+				var s:Stage = BaseDialogue.DIALOGUES.stage;
+
 				_noclick = new Sprite();
 				with( _noclick.graphics ) {
 					beginFill( 0xffffff, 0.8 );
-					drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+					drawRect(0, 0, s.stageWidth, s.stageHeight);
 					endFill();
 				}
-				DataModel.dialogues.addChild(_noclick);
+				BaseDialogue.DIALOGUES.addChild(_noclick);
+
+				BLOCK_MENU_COUNT++;
 			}
 
-			var fmt:TextFormat = new TextFormat("Verdana", 10, 0xffffffff, null, true);
+			_canScale = canScale;
+			_canClose = canClose;
+
+			_realWidth = _realHeight = 200;
+
+			_graphics = new Sprite();
+			_graphics.mouseEnabled = false;
+			_graphics.mouseChildren = false;
+			//_graphics.cacheAsBitmap = true;
+			//_graphics.cacheAsBitmapMatrix = new Matrix();
+			addChild( _graphics );
+
+			var fmt:TextFormat = new TextFormat("Verdana", 9, 0xdedede, true);
 
 			_topic = new TextField();
 			_topic.mouseEnabled = false;
@@ -46,70 +78,140 @@ package com.tbbgc.denom.dialogues {
 			_topic.selectable = false;
 			_topic.defaultTextFormat = fmt;
 			_topic.text = caption;
-			addChild(_topic);
+			_graphics.addChild(_topic);
 
-			DataModel.dialogues.addChild(this);
+			_container = new Sprite();
+			addChild( _container );
 
-			this.doubleClickEnabled = canMinimize;
+			BaseDialogue.DIALOGUES.addChild(this);
+
+			if( canMinimize ) this.doubleClickEnabled = true;
 
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onStartDrag);
 			this.addEventListener(MouseEvent.MOUSE_UP, onStopDrag);
 			this.addEventListener(MouseEvent.DOUBLE_CLICK, onDblClick);
+			if( canClose ) this.addEventListener(MouseEvent.CLICK, onClick);
+		}
 
-			_doScale = false;
-			_canScale = canScale;
+		protected function init( width:int, height:int, x:int=-1000, y:int=-1000, doMinimize:Boolean=false ):void {
+			if( x == -1000 ) x = stage.stageWidth/2 - width/2;
+			if( y == -1000 ) y = stage.stageHeight/2 - height/2;
 
-			super();
+			const id:String = dialogueID;
+			if( id != null ) {
+				var data:Object = SettingsManager.getItem( id );
+				x = ObjectEx.select(data, "x", x);
+				y = ObjectEx.select(data, "y", y);
+				width = ObjectEx.select(data, "w", width);
+				height = Math.max( 50, ObjectEx.select(data, "h", height) );
+				doMinimize = ObjectEx.select(data, "m", doMinimize) as Boolean;
+			}
 
-			resize( width, height );
+			doResize( width, height );
 
-			this.x = stage.stageWidth/2 - width/2;
-			this.y = stage.stageHeight/2 - height/2;
+			this.x = x;
+			this.y = y;
+
+			if( doMinimize ) {
+				minimize();
+			}
+		}
+
+		protected function transparentDisable():void {
+			with( _noclick.graphics ) {
+				clear();
+				beginFill( 0x000000, 1 );
+				drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+				endFill();
+			}
+			_noclick.alpha = 0.01;
+		}
+
+		private function saveDialogue():void {
+			const id:String = dialogueID;
+
+			if( id != null ) {
+				SettingsManager.setItem( id, {
+					"x": this.x,
+					"y": this.y,
+					"w": _realWidth,
+					"h": _realHeight,
+
+					"m": this.isMinimized
+				} );
+			}
 		}
 
 		protected function close():void {
 			if( _noclick != null ) {
 				_noclick.parent.removeChild(_noclick);
+				BLOCK_MENU_COUNT--;
+				if( BLOCK_MENU_COUNT == 0 ) {
+					stage.focus = null;
+				}
 			}
 
 			this.parent.removeChild(this);
 		}
 
-		protected function resize( width:int, height:int ):void {
-			height += HEADER;
+		protected function get container():Sprite { return _container; }
 
-			const len:int = this.numChildren;
-			for( var i:int = 0; i < len; i++ ) {
-				this.getChildAt(i).y += HEADER;
-			}
+		protected function get isMinimized():Boolean { return (this.scrollRect!=null); }
 
-			with( this.graphics ) {
+		protected function get dialogueID():String { return null; }
+
+		protected function onResize( width:int, height:int ):void {
+		}
+
+		private function doResize( width:int, height:int ):void {
+			_realWidth = width;
+			_realHeight = height;
+
+			with( _graphics.graphics ) {
 				clear();
 
-				lineStyle(1,0xffffff,0.5,true,"normal",null,null,15);
-
-				beginFill(0x000044);
-					drawRoundRect(0, 0, width, height, 16);
+				beginFill(0x525252);
+					lineStyle(1,0x262626,1);
+					drawRoundRect(0, 0, width, height, 8);
 				endFill();
 
-				beginFill(0x000000);
-					drawRoundRect(0, 0, width, HEADER, 16);
+				beginFill(0x333333);
+					lineStyle(1,0x262626,0);
+					drawRoundRect(0, 0, width, HEADER, 8);
 
 					if( _canScale ) {
-						drawCircle(width-EDGE/2, height-EDGE/2, EDGE/2);
+						drawRoundRect(0, height-EDGE, width, EDGE, 8);
 					}
 				endFill();
+
+				if( _canClose ) {
+					lineStyle(1,0x262626,0);
+					beginFill(0xbb0000, 0.3);
+					drawRoundRect((width-HEADER), 0, HEADER, HEADER, 8);
+					endFill();
+				}
 			}
 
 			_topic.y = 2;
 			_topic.x = width/2 - _topic.width/2;
+
+			const w:int = width-EDGE-EDGE;
+			const h:int = (height-HEADER) - (_canScale?EDGE:0) - EDGE - EDGE;
+
+			_container.x = EDGE;
+			_container.y = HEADER+EDGE;
+			_container.scrollRect = new Rectangle(0, 0, w, h);
+
+			onResize(w, h);
 		}
 
 		private function onStartDrag(e:MouseEvent):void {
 			if( e.target == this ) {
-				if( _canScale && this.scrollRect == null && e.localX > this.width-EDGE && e.localY > this.height-EDGE ) {
+				if( _canScale && this.scrollRect == null && e.localY > this.height-EDGE ) {
 					_sx = e.stageX;
 					_sy = e.stageY;
+					_bw = this.width;
+					_bh = this.height;
 					_doScale = true;
 
 					stage.addEventListener(MouseEvent.MOUSE_UP, onStopScale);
@@ -125,18 +227,14 @@ package com.tbbgc.denom.dialogues {
 		private function onStopDrag(e:MouseEvent):void {
 			if( !_doScale ) {
 				this.stopDrag();
+
+				saveDialogue();
 			}
 		}
 
 		private function onDoScale(e:MouseEvent):void {
 			if( _doScale ) {
-				var w:int = this.width + (e.stageX - _sx);
-				var h:int = this.height + (e.stageY - _sy);
-
-				_sx = e.stageX;
-				_sy = e.stageY;
-
-				resize(w, h-HEADER);
+				doResize(_bw + (e.stageX - _sx), _bh + (e.stageY - _sy));
 			}
 		}
 
@@ -146,6 +244,8 @@ package com.tbbgc.denom.dialogues {
 
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onDoScale);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, onStopScale);
+
+				saveDialogue();
 			}
 		}
 
@@ -159,12 +259,22 @@ package com.tbbgc.denom.dialogues {
 			}
 		}
 
+		private function onClick(e:MouseEvent):void {
+			if( e.target == this && e.localX > this.width - HEADER && e.localY < HEADER ) {
+				close();
+			}
+		}
+
 		public function minimize():void {
 			this.scrollRect = new Rectangle(0, 0, this.width, HEADER);
+
+			saveDialogue();
 		}
 
 		public function maximize():void {
 			this.scrollRect = null;
+
+			saveDialogue();
 		}
 	}
 }

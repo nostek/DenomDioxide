@@ -6,6 +6,7 @@ package com.tbbgc.denom.dialogues {
 	import com.tbbgc.denom.common.nodes.NoteNode;
 	import com.tbbgc.denom.common.nodes.parameters.ParameterNode;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
+	import com.tbbgc.denom.managers.SettingsManager;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.node.BaseNode;
 
@@ -22,30 +23,26 @@ package com.tbbgc.denom.dialogues {
 		public function ParametersDialogue() {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 450;
+			
+			super("Parameters", true, false, true, true);
 
 			_list = new List();
 			_list.allowMultipleSelection = false;
 			_list.componentInspectorSetting = true;
 			_list.addEventListener(ListEvent.ITEM_DOUBLE_CLICK, onEditParameter);
-			addChild( _list );
-
-			super(WIDTH, HEIGHT, "Parameters", true, false, true);
-
-			this.x = 20;
-			this.y = 20;
+			container.addChild( _list );
 
 			DataModel.SELECTED_NODE.onChanged.add( buildList );
 			DataModel.EDIT_PARAMETER.add( onSetEditParameter );
-
-			minimize();
+			
+			init(WIDTH, HEIGHT, 20, 20, false);
 		}
+		
+		override protected function get dialogueID():String { return SettingsManager.SETTINGS_PARAMS_DLG; }
 
-		override protected function resize( width:int, height:int ):void {
-			_list.x = _list.y = 10;
-			_list.width = width - 20;
-			_list.height = height - BaseDialogue.EDGE - _list.y;
-
-			super.resize(width, height);
+		override protected function onResize( width:int, height:int ):void {
+			_list.width = width;
+			_list.height = height;
 		}
 
 		private function buildList():void {

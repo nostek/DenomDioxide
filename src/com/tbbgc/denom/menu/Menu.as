@@ -1,7 +1,7 @@
 package com.tbbgc.denom.menu {
+	import com.tbbgc.denom.dialogues.BaseDialogue;
 	import com.tbbgc.denom.dialogues.ParametersDialogue;
 	import com.tbbgc.denom.dialogues.SoundsDialogue;
-	import com.tbbgc.denom.models.DataModel;
 
 	import org.osflash.signals.Signal;
 
@@ -175,9 +175,9 @@ package com.tbbgc.denom.menu {
 		private function onResetWindowsEvent( e:Event ):void {
 			var d:DisplayObjectContainer;
 
-			const len:int = DataModel.dialogues.numChildren;
+			const len:int = BaseDialogue.DIALOGUES.numChildren;
 			for( var i:int = 0; i < len; i++ ) {
-				d = DataModel.dialogues.getChildAt(i) as DisplayObjectContainer;
+				d = BaseDialogue.DIALOGUES.getChildAt(i) as DisplayObjectContainer;
 				if( d != null && d.numChildren > 0 ) {
 					d.x = 0;
 					d.y = 0;

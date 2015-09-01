@@ -41,6 +41,7 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.common.nodes.values.NumberNode;
 	import com.tbbgc.denom.common.nodes.values.RandomNode;
 	import com.tbbgc.denom.common.nodes.values.TextNode;
+	import com.tbbgc.denom.dialogues.BaseDialogue;
 	import com.tbbgc.denom.dialogues.InputDialogue;
 	import com.tbbgc.denom.dialogues.ManageDialogue;
 	import com.tbbgc.denom.dialogues.ParametersDialogue;
@@ -131,8 +132,7 @@ package com.tbbgc.denom {
 			_flows.addEventListener(Event.CHANGE, onSetFlow);
 			addChild(_flows);
 
-			DataModel.dialogues = new Sprite();
-			addChild(DataModel.dialogues);
+			BaseDialogue.DIALOGUES = addChild( new Sprite() ) as Sprite;
 
 			var menu:Menu = new Menu( stage );
 			menu.onSave.add( onSave );

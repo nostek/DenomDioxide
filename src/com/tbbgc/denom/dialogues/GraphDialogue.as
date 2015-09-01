@@ -1,9 +1,5 @@
 package com.tbbgc.denom.dialogues {
-	import fl.controls.Button;
-	import fl.events.ComponentEvent;
-
 	import com.tbbgc.denom.common.nodes.values.GraphNode;
-	import com.tbbgc.denom.models.DataModel;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -22,8 +18,6 @@ package com.tbbgc.denom.dialogues {
 
 		private var _graph:Sprite;
 
-		private var _close:Button;
-
 		private var _width:int;
 		private var _height:int;
 
@@ -34,19 +28,15 @@ package com.tbbgc.denom.dialogues {
 		public function GraphDialogue( node:GraphNode, x:Number, y:Number ) {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 150;
+			
+			super("Graph", true, false, true, true);
 
 			_node = node;
 
 			_graph = new Sprite();
 			_graph.doubleClickEnabled = true;
 			_graph.addEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick);
-			addChild(_graph);
-
-			_close = new Button();
-			_close.label = "Close";
-			_close.height = BaseDialogue.EDGE;
-			_close.addEventListener(ComponentEvent.BUTTON_DOWN, onClose);
-			addChild(_close);
+			container.addChild(_graph);
 
 			_hint = new TextField();
 			_hint.autoSize = TextFieldAutoSize.LEFT;
@@ -55,29 +45,19 @@ package com.tbbgc.denom.dialogues {
 			_hint.backgroundColor = 0xeeee00;
 			_hint.selectable = false;
 
-			super(WIDTH, HEIGHT, "Graph", true, false, true);
+			init(WIDTH, HEIGHT);
 
 			this.x = x;
 			this.y = y;
 
 			drawGraph();
 		}
+		
+		override protected function onResize( width:int, height:int ):void {
+			_width = width;
+			_height = height;
 
-		override protected function resize( width:int, height:int ):void {
-			_graph.x = _graph.y = 10;
-
-			_close.x = 10;
-			_close.y = height-_close.height;
-
-			_width = width - 20;
-			_height = height - (BaseDialogue.EDGE + 20);
 			drawGraph();
-
-			super.resize(width, height);
-		}
-
-		private function onClose(e:ComponentEvent):void {
-			close();
 		}
 
 		private function drawGraph():void {
@@ -170,14 +150,14 @@ package com.tbbgc.denom.dialogues {
 							"\nV: " + val.toFixed(4);
 			_hint.x = e.stageX + 25;
 			_hint.y = e.stageY + 25;
-			DataModel.dialogues.addChild(_hint);
+			BaseDialogue.DIALOGUES.addChild(_hint);
 		}
 
 		private function onMouseOut(e:MouseEvent):void {
 			if( _dragging != null ) return;
 
 			if( _hint.parent != null ) {
-				DataModel.dialogues.removeChild(_hint);
+				BaseDialogue.DIALOGUES.removeChild(_hint);
 			}
 		}
 
@@ -224,7 +204,7 @@ package com.tbbgc.denom.dialogues {
 							"\nV: " + val.toFixed(4);
 			_hint.x = e.stageX + 25;
 			_hint.y = e.stageY + 25;
-			DataModel.dialogues.addChild(_hint);
+			BaseDialogue.DIALOGUES.addChild(_hint);
 		}
 
 		private function onMouseMove(e:MouseEvent):void {
@@ -251,7 +231,7 @@ package com.tbbgc.denom.dialogues {
 			_dragging.stopDrag();
 			_dragging = null;
 
-			DataModel.dialogues.removeChild(_hint);
+			BaseDialogue.DIALOGUES.removeChild(_hint);
 
 			save();
 		}

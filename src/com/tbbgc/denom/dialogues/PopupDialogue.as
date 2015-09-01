@@ -11,31 +11,40 @@ package com.tbbgc.denom.dialogues {
 	 * @author simonrodriguez
 	 */
 	public class PopupDialogue extends BaseDialogue {
+		private var _label:TextField;
+		private var _button:Button;
+		
 		public function PopupDialogue( caption:String, text:String ) {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 150;
+			
+			super(caption, false, true, false, false);
 
 			var fmt:TextFormat = new TextFormat("Verdana", 10, 0xffffffff, null, true, null, null, null, TextFormatAlign.CENTER);
 
-			var label:TextField = new TextField();
-			label.autoSize = TextFieldAutoSize.LEFT;
-			label.selectable = false;
-			label.wordWrap = true;
-			label.width = WIDTH - 20;
-			label.defaultTextFormat = fmt;
-			label.text = text;
-			label.y = HEIGHT/2 - label.height/2;
-			label.x = WIDTH/2 - label.width/2;
-			addChild(label);
+			_label = new TextField();
+			_label.autoSize = TextFieldAutoSize.LEFT;
+			_label.selectable = false;
+			_label.wordWrap = true;
+			_label.defaultTextFormat = fmt;
+			_label.text = text;
+			container.addChild(_label);
 
-			var button:Button = new Button();
-			button.label = "OK";
-			button.x = WIDTH/2 - button.width/2;
-			button.y = HEIGHT - (button.height + 10);
-			button.addEventListener(MouseEvent.CLICK, onButton);
-			addChild(button);
-
-			super(WIDTH, HEIGHT, caption, false, true, false);
+			_button = new Button();
+			_button.label = "OK";
+			_button.addEventListener(MouseEvent.CLICK, onButton);
+			container.addChild(_button);
+			
+			init(WIDTH, HEIGHT);
+		}
+		
+		override protected function onResize( width:int, height:int ):void {
+			_label.width = width;
+			_label.y = height/2 - _label.height/2;
+			_label.x = width/2 - _label.width/2;
+			
+			_button.x = width/2 - _button.width/2;
+			_button.y = height - _button.height;
 		}
 
 		private function onButton(e:MouseEvent):void {
