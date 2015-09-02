@@ -1,6 +1,7 @@
 package com.tbbgc.denom.common.models {
 	import com.tbbgc.denom.common.nodes.GetSetNode;
 	import com.tbbgc.denom.common.nodes.NoteNode;
+	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.nodes.ProxyNode;
 	import com.tbbgc.denom.common.nodes.conditional.IfNode;
 	import com.tbbgc.denom.common.nodes.conditional.IsBetweenNode;
@@ -73,7 +74,8 @@ package com.tbbgc.denom.common.models {
 			IsOverLevelNode,
 			OverLevelValueNode,
 			Deg2RadNode,
-			NoteNode
+			NoteNode,
+			PluginNode
 		]);
 	}
 }

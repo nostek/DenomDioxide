@@ -8,9 +8,9 @@ package com.tbbgc.denom.common.input {
 
 		private var _owner:INode;
 
-		private var _single:Boolean;
+		protected var _run:Function;
 
-		private var _run:Function;
+		private var _single:Boolean;
 
 		private var _connections:Vector.<NodeInput>;
 
@@ -38,11 +38,11 @@ package com.tbbgc.denom.common.input {
 		}
 
 		public function disconnect( conn:NodeInput ):void {
-			_connections.splice( _connections.indexOf(conn), 1);
+			_connections.splice( _connections.indexOf(conn), 1 );
 		}
 
-		public function run( ... args ):* {
-			if( _run != null ) {
+		public function run(...args):* {
+			if (_run != null) {
 				return _run.apply( null, args );
 			}
 		}
@@ -50,13 +50,13 @@ package com.tbbgc.denom.common.input {
 		public function runConnections(...args):void {
 			const len:int = _connections.length;
 			for (var i:int = 0; i < len; i++) {
-				_connections[i].run.apply(null, args);
+				_connections[i].run.apply( null, args );
 			}
 		}
 
 		public function runFirst(...args):* {
-			if( _connections.length > 0 ) {
-				return _connections[0].run.apply(null, args);
+			if (_connections.length > 0) {
+				return _connections[0].run.apply( null, args );
 			}
 			return null;
 		}

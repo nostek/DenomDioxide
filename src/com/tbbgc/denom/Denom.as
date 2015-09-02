@@ -9,6 +9,7 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.common.models.AvailableNodes;
 	import com.tbbgc.denom.common.models.DenomShared;
 	import com.tbbgc.denom.common.nodes.GetSetNode;
+	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.nodes.conditional.IfNode;
 	import com.tbbgc.denom.common.nodes.conditional.IsBetweenNode;
 	import com.tbbgc.denom.common.nodes.conditional.IsOverLevelNode;
@@ -48,10 +49,12 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.dialogues.PopupDialogue;
 	import com.tbbgc.denom.dialogues.SoundsDialogue;
 	import com.tbbgc.denom.dialogues.YesNoDialogue;
+	import com.tbbgc.denom.managers.PluginManager;
 	import com.tbbgc.denom.managers.SettingsManager;
 	import com.tbbgc.denom.menu.Menu;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.FlowModel;
+	import com.tbbgc.denom.models.PluginModel;
 	import com.tbbgc.denom.models.UI;
 	import com.tbbgc.denom.node.BaseNode;
 	import com.tbbgc.denom.saveload.Load;
@@ -253,6 +256,13 @@ package com.tbbgc.denom {
 				return item;
 			};
 
+			var createplugin:Function = function(model:PluginModel):ContextMenuItem {
+				var ctxitem:ContextMenuItem = new ContextMenuItem(model.name);
+				ctxitem.data = model;
+				ctxitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMenuSelectPlugin);
+				return ctxitem;
+			};
+
 			var create:Function = function(node:Class):ContextMenuItem {
 				var ctxitem:ContextMenuItem = new ContextMenuItem(nodename(node));
 				ctxitem.data = node;
@@ -272,11 +282,13 @@ package com.tbbgc.denom {
 			var math:Array = [];
 			var conditions:Array = [];
 			var setter:Array = [];
+			var plugins:Array = [];
 			var other:Array = [];
 
 			for each( var node:Class in AvailableNodes.AVAILABLE_NODES ) {
 				switch( node ) {
 					case SelectSequenceNode:
+					case PluginNode:
 					break;
 
 					case EventNode:
@@ -352,6 +364,11 @@ package com.tbbgc.denom {
 					break;
 				}
 			}
+			
+			var plg:Vector.<PluginModel> = PluginManager.plugins;
+			for each (var p:PluginModel in plg) {
+				plugins.push(createplugin(p));
+			}
 
 			var selectors:Array = 	[
 										createsub("Random", selectrandom),
@@ -373,6 +390,7 @@ package com.tbbgc.denom {
 								createsub("Parameters", parameters),
 								createsub("Sound", sound),
 								createsub("Debug", debug),
+								createsub("Plugins", plugins),
 								createsub("Other", other),
 							];
 		}
@@ -414,6 +432,17 @@ package com.tbbgc.denom {
 				addNode( currentFlow, new c(), _menuPosition.x, _menuPosition.y );
 
 				_lastNode = c;
+			}
+		}
+
+		private function onMenuSelectPlugin(e:ContextMenuEvent):void {
+			var item:ContextMenuItem = e.currentTarget as ContextMenuItem;
+
+			var curr:Sprite = currentFlow;
+
+			if( curr != null ) {
+				var m:PluginModel = item.data as PluginModel;
+				addNode( currentFlow, new PluginNode(m.data), _menuPosition.x, _menuPosition.y );
 			}
 		}
 
