@@ -1,5 +1,6 @@
 package com.tbbgc.denom.saveload {
 	import com.tbbgc.denom.common.input.NodeInput;
+	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.FlowModel;
@@ -87,7 +88,13 @@ package com.tbbgc.denom.saveload {
 						o = {};
 						o[SLKeys.NODE_ID] = packString(nodeName(node));
 						o[SLKeys.NODE_X] = node.x;
-						o[SLKeys.NODE_Y] = node.y; 
+						o[SLKeys.NODE_Y] = node.y;
+						
+						//Plugins
+						if (node is PluginNode) {
+							o[SLKeys.NODE_PLUGIN_NAME] = packString((node as PluginNode).pluginName);
+							o[SLKeys.NODE_PLUGIN_DATA] = packString(JSON.stringify((node as PluginNode).pluginData));
+						}
 						
 						inputs = saveInputs(flow, node);
 						if (inputs != null) {

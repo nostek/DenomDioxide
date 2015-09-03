@@ -82,6 +82,37 @@ package com.tbbgc.denom.node {
 			}
 			return null;
 		}
+		
+		public function getParameterByName(name:String):NodeParameter {
+			const len:int = _parameters.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_parameters[i].name == name) {
+					return _parameters[i];
+				}
+			}
+			return null; 
+		}
+		
+		public function getLeftByName(name:String):NodeInput {
+			const len:int = _left.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_left[i].name == name) {
+					return _left[i];
+				}
+			}
+			return null;
+		}
+
+		public function getRightByName(name:String):NodeInput {
+			const len:int = _right.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_right[i].name == name) {
+					return _right[i];
+				}
+			}
+			return null;
+		}
+
 
 		public function reset():void {
 

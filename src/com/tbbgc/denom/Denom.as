@@ -54,7 +54,6 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.menu.Menu;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.FlowModel;
-	import com.tbbgc.denom.models.PluginModel;
 	import com.tbbgc.denom.models.UI;
 	import com.tbbgc.denom.node.BaseNode;
 	import com.tbbgc.denom.saveload.Load;
@@ -170,10 +169,10 @@ package com.tbbgc.denom {
 
 			addNode( getFlow("start"), new EventNode(), 100, 100 );
 			onSetFlow(null, "start");
-
+			
 			setTimeout( onFirst, 50);
 		}
-
+		
 		private function getAppDescVersion( label:Boolean=false ):String {
 			var version:String;
 
@@ -256,9 +255,9 @@ package com.tbbgc.denom {
 				return item;
 			};
 
-			var createplugin:Function = function(model:PluginModel):ContextMenuItem {
-				var ctxitem:ContextMenuItem = new ContextMenuItem(model.name);
-				ctxitem.data = model;
+			var createplugin:Function = function(data:Object):ContextMenuItem {
+				var ctxitem:ContextMenuItem = new ContextMenuItem(PluginManager.getPluginName(data));
+				ctxitem.data = data;
 				ctxitem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onMenuSelectPlugin);
 				return ctxitem;
 			};
@@ -365,8 +364,8 @@ package com.tbbgc.denom {
 				}
 			}
 			
-			var plg:Vector.<PluginModel> = PluginManager.plugins;
-			for each (var p:PluginModel in plg) {
+			var plg:Vector.<Object> = PluginManager.plugins;
+			for each (var p:Object in plg) {
 				plugins.push(createplugin(p));
 			}
 
@@ -441,8 +440,7 @@ package com.tbbgc.denom {
 			var curr:Sprite = currentFlow;
 
 			if( curr != null ) {
-				var m:PluginModel = item.data as PluginModel;
-				addNode( currentFlow, new PluginNode(m.data), _menuPosition.x, _menuPosition.y );
+				addNode( currentFlow, new PluginNode(item.data as Object), _menuPosition.x, _menuPosition.y );
 			}
 		}
 

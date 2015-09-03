@@ -1,7 +1,9 @@
 package com.tbbgc.denom.saveload {
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.models.AvailableNodes;
+	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
+	import com.tbbgc.denom.managers.PluginManager;
 	import com.tbbgc.denom.models.FlowModel;
 	import com.tbbgc.denom.node.BaseNode;
 
@@ -26,6 +28,7 @@ package com.tbbgc.denom.saveload {
 			var a:Array;
 			var len:int;
 			var i:int;
+			var p:Object;
 
 			for each( var view:Object in views ) {
 				flow = new FlowModel();
@@ -41,7 +44,18 @@ package com.tbbgc.denom.saveload {
 					
 					c = getClass( unpackString(obj[SLKeys.NODE_ID]) );
 					
-					node = new c();
+					if (c == PluginNode) {
+						p = PluginManager.getPluginByName(unpackString(obj[SLKeys.NODE_PLUGIN_NAME]));
+						
+						if (p == null) {
+							continue;
+						}
+						
+						node = new c(data);
+					} else {
+						node = new c();	
+					}
+					
 					node.x = obj[SLKeys.NODE_X];
 					node.y = obj[SLKeys.NODE_Y];
 					flow.nodes.push(node);
@@ -70,26 +84,18 @@ package com.tbbgc.denom.saveload {
 		}
 		
 		private static function loadInputs( node:BaseNode, data:Object, nodes:Vector.<BaseNode> ):void {
-			var name:String, cname:String;
-			var input:NodeInput, cinput:NodeInput;;
-			var child:BaseNode;
-			var conn:Object;
-
-			for each( var obj:Object in data ) {
-				name = unpackString(obj[SLKeys.INPUT_NAME]);
-
-				for each( input in node.getRight() ) {
-					if( input.name == name ) {
-						for each( conn in obj[SLKeys.INPUT_CONNECTIONS] ) {
-							child = nodes[ conn[SLKeys.CONNECTION_INDEX] ];
-							cname = unpackString(conn[SLKeys.CONNECTION_NAME]);
-
-							for each( cinput in child.getLeft() ) {
-								if( cinput.name == cname ) {
-									input.connect( cinput );
-									cinput.connect( input );
-								}
-							}
+			var r:NodeInput, l:NodeInput;
+			
+			for each (var obj:Object in data) {
+				r = node.getRightByName(unpackString(obj[SLKeys.INPUT_NAME]));
+				
+				if (r != null) {
+					for each( var cobj:Object in obj[SLKeys.INPUT_CONNECTIONS] ) {
+						l = nodes[ cobj[SLKeys.CONNECTION_INDEX] ].getLeftByName(unpackString(cobj[SLKeys.CONNECTION_NAME]));
+						
+						if (l != null) {
+							r.connect(l);
+							l.connect(r);
 						}
 					}
 				}
@@ -97,11 +103,12 @@ package com.tbbgc.denom.saveload {
 		}
 
 		private static function loadParameters( node:BaseNode, data:Object ):void {
-			for( var key:int in data ) {
-				for each( var param:NodeParameter in node.getParameters() ) {
-					if( param.name == unpackString(key) ) {
-						param.value = unpackString(data[key]);
-					}
+			var p:NodeParameter;
+			
+			for (var key:int in data) {
+				p = node.getParameterByName(unpackString(key));
+				if (p != null) {
+					p.value = unpackString(data[key]);
 				}
 			}
 		}

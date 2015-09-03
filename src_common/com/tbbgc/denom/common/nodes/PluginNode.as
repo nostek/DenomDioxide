@@ -1,4 +1,6 @@
 package com.tbbgc.denom.common.nodes {
+	import com.tbbgc.denom.Denom;
+	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.input.NodeInputPlugin;
 	import com.tbbgc.denom.common.interfaces.INode;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
@@ -7,10 +9,10 @@ package com.tbbgc.denom.common.nodes {
 	 * @author Simon
 	 */
 	public class PluginNode extends BaseNode implements INode {
-		private var _name:String;
+		private var _data:Object;
 		
 		public function PluginNode(data:Object) {
-			_name = data["name"];
+			_data = data;
 			
 			var len:int;
 			var i:int;
@@ -28,7 +30,7 @@ package com.tbbgc.denom.common.nodes {
 					o.push( new NodeParameter(a[i]["name"], a[i]["value"]) );
 				}
 				
-				parameters.apply(null, o);
+				this.parameters.apply(null, o);
 			}
 			
 			a = data["left"];
@@ -38,22 +40,70 @@ package com.tbbgc.denom.common.nodes {
 				len = a.length;
 				
 				for (i = 0; i < len; i++) {
-					o.push( new NodeInputPlugin(this, a[i]["name"], onLeft, a[i]["id"], (a[i]["single"] != null) ? a[i]["single"] as Boolean : false) );
+					o.push( new NodeInputPlugin(this, a[i]["name"], onLeft, a[i]["id"], a[i]["def"]) );
 				}
 				
-				left.apply(null, o);
+				this.left.apply(null, o);
+			}
+
+			a = data["right"];
+			if (a != null) {
+				o = [];
+				
+				len = a.length;
+				
+				for (i = 0; i < len; i++) {
+					o.push( new NodeInput(this, a[i]["name"], null, (a[i]["single"] != null) ? a[i]["single"] as Boolean : false) );
+				}
+				
+				this.right.apply(null, o);
 			}
 							
 			super();
 		}
 
 		public function get nodeName() : String {
-			return "PLUGIN: " + _name;
+			return "PLUGIN: " + pluginName;
 		}
 		
+		public function get pluginName() : String {
+			return _data["name"];
+		}
+		
+		public function get pluginData() : Object {
+			return _data;
+		}
+		
+		public function runRight(name:String, args:Array):* {
+			var n:NodeInput = this.getRightByName(name);
+			if (n != null) {
+				if (n.single) {
+					return n.runFirst.apply(null, args);
+				} else {
+					n.runConnections.apply(null, args);
+				}
+			}
+			return null;
+		}
+
 		private function onLeft(id:String, args:Array):* {
-			trace(id, args);
-			return this.getParameters()[0].value; //TODO
+			if (!Denom.IS_EDITOR) {
+				return this.shared.runPlugin(id, this, args);
+			}
+			return getLeftPluginById(id).def;
+		}
+		
+		private function getLeftPluginById(id:String):NodeInputPlugin {
+			var p:Vector.<NodeInput> = this.getLeft();
+			
+			const len:int = p.length;
+			for (var i:int = 0; i < len; i++) {
+				if (p[i] is NodeInputPlugin && (p[i] as NodeInputPlugin).id == id) {
+					return p[i] as NodeInputPlugin;
+				}
+			}
+			
+			return null;
 		}
 	}
 }

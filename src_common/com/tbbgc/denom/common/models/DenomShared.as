@@ -1,5 +1,6 @@
 package com.tbbgc.denom.common.models {
 	import com.tbbgc.denom.common.managers.DenomFileManager;
+	import com.tbbgc.denom.common.nodes.PluginNode;
 
 	import org.osflash.signals.OnceSignal;
 	import org.osflash.signals.Signal;
@@ -18,6 +19,8 @@ package com.tbbgc.denom.common.models {
 		private var _globalParameters:Dictionary;
 		private var _parameters:Dictionary;
 		
+		private var _plugins:Dictionary;
+		
 		private var _count:int;
 
 		public function DenomShared( onEnterFrame:Signal, fileManager:DenomFileManager, globalParameters:Dictionary ) {
@@ -29,6 +32,8 @@ package com.tbbgc.denom.common.models {
 			_onPostEvent = new Signal(String, Array);
 			
 			_parameters = new Dictionary();
+			
+			_plugins = new Dictionary();
 			
 			_count = 0;
 		}
@@ -67,6 +72,18 @@ package com.tbbgc.denom.common.models {
 		
 		public function getParameter( id:String, global:Boolean ):* {
 			return (!global) ? _parameters[id] : _globalParameters[id];
+		}
+		
+		public function registerPlugin( id:String, callback:Function ):void {
+			_plugins[id] = callback;
+		}
+		
+		public function runPlugin( id:String, node:PluginNode, args:Array ):* {
+			var f:Function = _plugins[id];
+			if (f != null) {
+				return f(node, args);
+			}
+			return null;
 		}
 	}
 }
