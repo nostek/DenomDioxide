@@ -1,4 +1,9 @@
-/bin/*
-/.settings/launch
-/src/com/tbbgc/denom/common
-/src_standalone/com/tbbgc/denom/common
+denomdioxide/bin/*
+!denomdioxide/bin/DenomDioxide-app.xml
+
+denomdioxide/.settings/launch
+
+denomdioxide/src/com/tbbgc/denom/common
+denomdioxide/src_standalone/com/tbbgc/denom/common
+
+denomdioxide/certs
