@@ -23,7 +23,7 @@ package com.tbbgc.denom.dialogues {
 		public function ParametersDialogue() {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 450;
-			
+
 			super("Parameters", true, false, true, true);
 
 			_list = new List();
@@ -34,10 +34,10 @@ package com.tbbgc.denom.dialogues {
 
 			DataModel.SELECTED_NODE.onChanged.add( buildList );
 			DataModel.EDIT_PARAMETER.add( onSetEditParameter );
-			
+
 			init(WIDTH, HEIGHT, 20, 20, false);
 		}
-		
+
 		override protected function get dialogueID():String { return SettingsManager.SETTINGS_PARAMS_DLG; }
 
 		override protected function onResize( width:int, height:int ):void {
@@ -107,9 +107,9 @@ package com.tbbgc.denom.dialogues {
 			//false
 			//number
 			//text
-			
+
 			if (text == "true") {
-				_selectedNode.setParameter(_selectedParameter.name, true);	
+				_selectedNode.setParameter(_selectedParameter.name, true);
 			} else if (text == "false") {
 				_selectedNode.setParameter(_selectedParameter.name, false);
 			} else if (!isNaN(Number(text))) {
@@ -117,7 +117,7 @@ package com.tbbgc.denom.dialogues {
 			} else {
 				_selectedNode.setParameter(_selectedParameter.name, text);
 			}
-			
+
 			buildList();
 		}
 

@@ -46,10 +46,10 @@ package com.tbbgc.denom.saveload {
 
 				flows.push( flow );
 			}
-			
+
 			return flows;
 		}
-		
+
 		private static function loadInputs( node:BaseNode, data:Object, nodes:Vector.<BaseNode> ):void {
 			var name:String, cname:String;
 			var input:NodeInput, cinput:NodeInput;;

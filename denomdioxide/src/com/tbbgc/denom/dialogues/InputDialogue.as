@@ -29,7 +29,7 @@ package com.tbbgc.denom.dialogues {
 			super(caption, false, true, true, true);
 
 			_onOK = new OnceSignal( String );
-			
+
 			var fmt:TextFormat = new TextFormat("Verdana", 10, 0xffffffff, null, true);
 
 			_label = new TextField();
@@ -54,7 +54,7 @@ package com.tbbgc.denom.dialogues {
 
 			setTimeout(onFocusSet, 150);
 		}
-		
+
 		override protected function onResize( width:int, height:int ):void {
 			_label.width = width;
 

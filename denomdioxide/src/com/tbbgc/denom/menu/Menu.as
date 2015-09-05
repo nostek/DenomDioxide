@@ -219,11 +219,11 @@ package com.tbbgc.denom.menu {
 		private function onDebugAllEvent( e:Event ):void {
 			_onDebugAll.dispatch();
 		}
-		
+
 		private function onImportSounds( e:Event ):void {
 			SoundsManager.askFolder();
 		}
-		
+
 		private function onImportPlugins( e:Event ):void {
 			PluginManager.askFolder();
 		}

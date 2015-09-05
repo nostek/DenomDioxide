@@ -8,15 +8,15 @@ package com.tbbgc.denom.managers {
 	 */
 	public class SoundsManager {
 		private static var _sounds:Vector.<Object>;
-		
+
 		public function SoundsManager() {
 			_sounds = new Vector.<Object>();
 		}
-		
+
 		public static function get sounds():Vector.<Object> {
 			return _sounds;
 		}
-		
+
 		public static function runFirst():void {
 			if (SettingsManager.haveItem( SettingsManager.SETTINGS_SOUNDS )) {
 				var path:String = SettingsManager.getItem( SettingsManager.SETTINGS_SOUNDS ) as String;
@@ -24,15 +24,15 @@ package com.tbbgc.denom.managers {
 				parse( path );
 			}
 		}
-		
+
 		////////////////////////
-		
+
 		public static function askFolder():void {
 			var f:File = new File();
 			f.addEventListener(Event.SELECT, onFolderSelected);
 			f.browseForDirectory("Select sound directory");
 		}
-		
+
 		private static function onFolderSelected(e:Event):void {
 			var file:File = e.target as File;
 
@@ -41,22 +41,22 @@ package com.tbbgc.denom.managers {
 			SoundsManager.parse( path );
 		}
 
-		////////////////////////		
-		
+		////////////////////////
+
 		private static function parse( path:String ):void {
 			var file:File = new File( path );
-			
+
 			_sounds = new Vector.<Object>();
-			
+
 			parseFolder( file, file );
-			
+
 			SettingsManager.setItem( SettingsManager.SETTINGS_SOUNDS, path );
-			
+
 			DataModel.shared.fileManager.base = path;
-			
+
 			DataModel.ON_SOUNDS_SET.dispatch();
 		}
-		
+
 		private static function parseFolder( file:File, base:File ):void {
 			var files:Array = file.getDirectoryListing();
 
@@ -76,6 +76,6 @@ package com.tbbgc.denom.managers {
 					parseFolder( f, base );
 				}
 			}
-		}		
+		}
 	}
 }

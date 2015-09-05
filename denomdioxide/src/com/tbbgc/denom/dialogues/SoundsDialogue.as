@@ -19,7 +19,7 @@ package com.tbbgc.denom.dialogues {
 		public function SoundsDialogue() {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 450;
-			
+
 			super("Sounds", true, false, true, true);
 
 			_list = new List();
@@ -29,30 +29,30 @@ package com.tbbgc.denom.dialogues {
 			container.addChild( _list );
 
 			init( WIDTH, HEIGHT, 20, 40, false );
-			
+
 			DataModel.ON_SOUNDS_SET.add( onSounds );
-			
+
 			onSounds();
 		}
-		
+
 		override protected function get dialogueID():String { return SettingsManager.SETTINGS_SOUNDS_DLG; }
 
 		override protected function onResize( width:int, height:int ):void {
 			_list.width = width;
 			_list.height = height;
 		}
-		
+
 		override protected function close():void {
 			DataModel.ON_SOUNDS_SET.remove( onSounds );
-			
+
 			super.close();
 		}
 
 		private function onSounds():void {
 			_list.removeAll();
-			
+
 			var s:Vector.<Object> = SoundsManager.sounds;
-			
+
 			const len:int = s.length;
 			for (var i:int = 0; i < len; i++) {
 				_list.addItem( s[i] );

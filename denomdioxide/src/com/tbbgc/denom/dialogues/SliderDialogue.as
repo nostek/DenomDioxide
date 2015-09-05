@@ -18,7 +18,7 @@ package com.tbbgc.denom.dialogues {
 		public function SliderDialogue( node:ParameterNode, x:Number, y:Number ) {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 70;
-			
+
 			super("Slider [" + (node as INodeParameter).parameterName + "]", true, false, true, true);
 
 			_node = node;
@@ -42,7 +42,7 @@ package com.tbbgc.denom.dialogues {
 		override protected function onResize( width:int, height:int ):void {
 			_slider.width = width;
 		}
-		
+
 		private function onScroll(e:ScrollEvent):void {
 			_node.setParameter(null, _slider.scrollPosition / 10000);
 		}

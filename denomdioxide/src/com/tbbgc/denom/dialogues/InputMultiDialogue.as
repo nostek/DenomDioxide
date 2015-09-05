@@ -27,7 +27,7 @@ package com.tbbgc.denom.dialogues {
 			const HEIGHT:int = 500;
 
 			super(caption, false, true, true, true);
-			
+
 			var fmt:TextFormat = new TextFormat("Verdana", 10, 0xffffffff, null, true);
 
 			_label = new TextField();

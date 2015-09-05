@@ -64,12 +64,12 @@ package com.tbbgc.denom.saveload {
 
 		private static function load( data:Object ):void {
 			var flows:Vector.<FlowModel> = null;
-			
+
 			if (data["version"] == 1) {
-				flows = Load_v1.run(data);	
+				flows = Load_v1.run(data);
 			}
 			if (data["version"] == 2) {
-				flows = Load_v2.run(data);	
+				flows = Load_v2.run(data);
 			}
 
 			_onComplete( flows );

@@ -28,7 +28,7 @@ package com.tbbgc.denom.dialogues {
 		public function GraphDialogue( node:GraphNode, x:Number, y:Number ) {
 			const WIDTH:int = 300;
 			const HEIGHT:int = 150;
-			
+
 			super("Graph", true, false, true, true);
 
 			_node = node;
@@ -52,7 +52,7 @@ package com.tbbgc.denom.dialogues {
 
 			drawGraph();
 		}
-		
+
 		override protected function onResize( width:int, height:int ):void {
 			_width = width;
 			_height = height;

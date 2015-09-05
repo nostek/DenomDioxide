@@ -82,7 +82,7 @@ package com.tbbgc.denom.node {
 			}
 			return null;
 		}
-		
+
 		public function getParameterByName(name:String):NodeParameter {
 			const len:int = _parameters.length;
 			for (var i:int = 0; i < len; i++) {
@@ -90,9 +90,9 @@ package com.tbbgc.denom.node {
 					return _parameters[i];
 				}
 			}
-			return null; 
+			return null;
 		}
-		
+
 		public function getLeftByName(name:String):NodeInput {
 			const len:int = _left.length;
 			for (var i:int = 0; i < len; i++) {

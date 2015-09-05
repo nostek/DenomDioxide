@@ -15,37 +15,37 @@ package com.tbbgc.denom.common.models {
 		private var _onPostEvent:Signal;
 
 		private var _fileManager:DenomFileManager;
-		
+
 		private var _globalParameters:Dictionary;
 		private var _parameters:Dictionary;
-		
+
 		private var _plugins:Dictionary;
-		
+
 		private var _count:int;
 
 		public function DenomShared( onEnterFrame:Signal, fileManager:DenomFileManager, globalParameters:Dictionary ) {
 			_onEnterFrame = onEnterFrame;
 			_fileManager = fileManager;
 			_globalParameters = globalParameters;
-			
+
 			_onLoaded = new OnceSignal();
 			_onPostEvent = new Signal(String, Array);
-			
+
 			_parameters = new Dictionary();
-			
+
 			_plugins = new Dictionary();
-			
+
 			_count = 0;
 		}
 
 		public function get onEnterFrame():Signal {
 			return _onEnterFrame;
 		}
-		
+
 		public function get onPostEvent():Signal {
 			return _onPostEvent;
 		}
-		
+
 		public function get onLoaded():OnceSignal {
 			return _onLoaded;
 		}
@@ -60,24 +60,24 @@ package com.tbbgc.denom.common.models {
 
 		public function decLoad():void {
 			_count--;
-			
+
 			if (_count == 0) {
 				_onLoaded.dispatch();
 			}
 		}
-		
+
 		public function setParameter( id:String, global:Boolean, value:* ):void {
 			((!global) ? _parameters : _globalParameters)[id] = value;
 		}
-		
+
 		public function getParameter( id:String, global:Boolean ):* {
 			return (!global) ? _parameters[id] : _globalParameters[id];
 		}
-		
+
 		public function registerPlugin( id:String, callback:Function ):void {
 			_plugins[id] = callback;
 		}
-		
+
 		public function runPlugin( id:String, node:PluginNode, args:Array ):* {
 			var f:Function = _plugins[id];
 			if (f != null) {

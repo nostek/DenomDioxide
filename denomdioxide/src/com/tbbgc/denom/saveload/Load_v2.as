@@ -13,10 +13,10 @@ package com.tbbgc.denom.saveload {
 	 */
 	public class Load_v2 {
 		private static var _strings:Array;
-		
+
 		public static function run(data:Object):Vector.<FlowModel> {
 			var flows:Vector.<FlowModel> = new Vector.<FlowModel>();
-			
+
 			_strings = data[SLKeys.MAIN_STRINGS];
 
 			var views:Array = data[SLKeys.MAIN_VIEWS];
@@ -35,27 +35,27 @@ package com.tbbgc.denom.saveload {
 				flow.name = unpackString(view[SLKeys.FLOW_NAME]);
 
 				flow.nodes = new Vector.<BaseNode>();
-				
+
 				a = view[SLKeys.FLOW_NODES];
 				len = a.length;
-				
+
 				for (i = 0; i < len; i++) {
 					obj = a[i];
-					
+
 					c = getClass( unpackString(obj[SLKeys.NODE_ID]) );
-					
+
 					if (c == PluginNode) {
 						p = PluginManager.getPluginByName(unpackString(obj[SLKeys.NODE_PLUGIN_NAME]));
-						
+
 						if (p == null) {
 							continue;
 						}
-						
+
 						node = new c(p);
 					} else {
-						node = new c();	
+						node = new c();
 					}
-					
+
 					node.x = obj[SLKeys.NODE_X];
 					node.y = obj[SLKeys.NODE_Y];
 					flow.nodes.push(node);
@@ -64,7 +64,7 @@ package com.tbbgc.denom.saveload {
 						loadParameters(node, obj[SLKeys.NODE_PARAMS]);
 					}
 				}
-				
+
 				for (i = 0; i < len; i++) {
 					obj = a[i];
 
@@ -77,22 +77,22 @@ package com.tbbgc.denom.saveload {
 
 				flows.push( flow );
 			}
-			
+
 			_strings = null;
-			
+
 			return flows;
 		}
-		
+
 		private static function loadInputs( node:BaseNode, data:Object, nodes:Vector.<BaseNode> ):void {
 			var r:NodeInput, l:NodeInput;
-			
+
 			for each (var obj:Object in data) {
 				r = node.getRightByName(unpackString(obj[SLKeys.INPUT_NAME]));
-				
+
 				if (r != null) {
 					for each( var cobj:Object in obj[SLKeys.INPUT_CONNECTIONS] ) {
 						l = nodes[ cobj[SLKeys.CONNECTION_INDEX] ].getLeftByName(unpackString(cobj[SLKeys.CONNECTION_NAME]));
-						
+
 						if (l != null) {
 							r.connect(l);
 							l.connect(r);
@@ -104,7 +104,7 @@ package com.tbbgc.denom.saveload {
 
 		private static function loadParameters( node:BaseNode, data:Object ):void {
 			var p:NodeParameter;
-			
+
 			for (var key:int in data) {
 				p = node.getParameterByName(unpackString(key));
 				if (p != null) {
@@ -127,7 +127,7 @@ package com.tbbgc.denom.saveload {
 			var className : String = getQualifiedClassName(c);
 			return className.slice(className.lastIndexOf("::") + 2);
 		}
-		
+
 		private static function unpackString( i:int ):* {
 			return _strings[i];
 		}

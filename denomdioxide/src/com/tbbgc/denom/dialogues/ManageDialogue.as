@@ -23,7 +23,7 @@ package com.tbbgc.denom.dialogues {
 		public function ManageDialogue( flowcontainer:Sprite ) {
 			const WIDTH:int = 400;
 			const HEIGHT:int = 500;
-			
+
 			super("Manage", false, true, false, false);
 
 			_flowcontainer = flowcontainer;
@@ -47,7 +47,7 @@ package com.tbbgc.denom.dialogues {
 
 			buildList();
 		}
-		
+
 		override protected function onResize( width:int, height:int ):void {
 			_rename.x = width - _rename.width;
 
@@ -55,10 +55,10 @@ package com.tbbgc.denom.dialogues {
 			_list.width = width;
 			_list.height = height - _list.y;
 		}
-		
+
 		override protected function close():void {
 			_onClose.dispatch();
-			
+
 			super.close();
 		}
 

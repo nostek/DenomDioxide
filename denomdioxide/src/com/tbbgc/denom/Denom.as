@@ -85,7 +85,7 @@ package com.tbbgc.denom {
 
 	public class Denom extends Sprite {
 		public static const IS_EDITOR:Boolean = true;
-		
+
 		private var _menu:ContextMenu;
 		private var _menuPosition:Point;
 
@@ -173,10 +173,10 @@ package com.tbbgc.denom {
 
 			addNode( getFlow("start"), new EventNode(), 100, 100 );
 			onSetFlow(null, "start");
-			
+
 			setTimeout( onFirst, 50);
 		}
-		
+
 		private function getAppDescVersion( label:Boolean=false ):String {
 			var version:String;
 
@@ -213,7 +213,7 @@ package com.tbbgc.denom {
 		private function onFirstYes():void {
 			PluginManager.runFirst();
 			SoundsManager.runFirst();
-			
+
 			Load.runFirst( onPreLoad, onLoadComplete );
 		}
 
@@ -368,7 +368,7 @@ package com.tbbgc.denom {
 					break;
 				}
 			}
-			
+
 			var plg:Vector.<Object> = PluginManager.plugins;
 			for each (var p:Object in plg) {
 				plugins.push(createplugin(p));

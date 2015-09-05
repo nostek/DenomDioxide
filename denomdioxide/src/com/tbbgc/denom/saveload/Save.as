@@ -44,7 +44,7 @@ package com.tbbgc.denom.saveload {
 
 		private static function add( node:BaseNode ):void {
 			var flow:FlowModel;
-			
+
 			const len:int = _flows.length;
 			for (var i:int = 0; i < len; i++) {
 				flow = _flows[i];
@@ -72,46 +72,46 @@ package com.tbbgc.denom.saveload {
 			var o:Object;
 			var inputs:Array;
 			var params:Object;
-			
+
 			const len:int = _flows.length;
 			for (var i:int = 0; i < len; i++) {
 				flow = _flows[i];
-				
+
 				nodes = [];
 
 				blen = flow.nodes.length;
-				
+
 				if( blen > 0 ) {
 					for (var b:int = 0; b < blen; b++) {
 						node = flow.nodes[b];
-						
+
 						o = {};
 						o[SLKeys.NODE_ID] = packString(nodeName(node));
 						o[SLKeys.NODE_X] = node.x;
 						o[SLKeys.NODE_Y] = node.y;
-						
+
 						//Plugins
 						if (node is PluginNode) {
 							o[SLKeys.NODE_PLUGIN_NAME] = packString((node as PluginNode).pluginName);
 							o[SLKeys.NODE_PLUGIN_DATA] = packString(JSON.stringify((node as PluginNode).pluginData));
 						}
-						
+
 						inputs = saveInputs(flow, node);
 						if (inputs != null) {
 							o[SLKeys.NODE_INPUTS] = inputs;
 						}
-						
+
 						params = saveParameters(node);
 						if (params != null) {
 							o[SLKeys.NODE_PARAMS] = params;
 						}
-						
+
 						nodes.push( o );
 					}
 
 					o = {};
 					o[SLKeys.FLOW_NAME] = packString(flow.name);
-					o[SLKeys.FLOW_NODES] = nodes; 
+					o[SLKeys.FLOW_NODES] = nodes;
 					views.push(o);
 				}
 			}
@@ -141,17 +141,17 @@ package com.tbbgc.denom.saveload {
 					for each( var conn:NodeInput in input.connections ) {
 						o = {};
 						o[SLKeys.CONNECTION_NAME] = packString(conn.name);
-						o[SLKeys.CONNECTION_INDEX] = getIndex( flow, conn.owner as BaseNode );  
+						o[SLKeys.CONNECTION_INDEX] = getIndex( flow, conn.owner as BaseNode );
 						c.push(o);
 					}
 
 					o = {};
 					o[SLKeys.INPUT_NAME] = packString(input.name);
-					o[SLKeys.INPUT_CONNECTIONS] = c; 
+					o[SLKeys.INPUT_CONNECTIONS] = c;
 					a.push(o);
 				}
 			}
-			
+
 			if (a.length == 0) {
 				return null;
 			}
@@ -167,7 +167,7 @@ package com.tbbgc.denom.saveload {
 				o[ packString(param.name) ] = packString(param.value);
 				c = true;
 			}
-			
+
 			if (!c) {
 				return null;
 			}
@@ -199,7 +199,7 @@ package com.tbbgc.denom.saveload {
 			}
 			return r;
 		}
-		
+
 		private static function packString( s:* ):int {
 			const len:int = _strings.length;
 			for (var i:int = 0; i < len; i++) {
@@ -207,9 +207,9 @@ package com.tbbgc.denom.saveload {
 					return i;
 				}
 			}
-			
+
 			_strings.push(s);
-			
+
 			return _strings.length-1;
 		}
 	}

@@ -172,15 +172,15 @@ package com.tbbgc.denom.node {
 			_text.text = (this as INode).nodeName;
 			if( (this as BaseNode).getParameters() != null ) {
 				var pval:String;
-				
+
 				_text.appendText("\n");
 				for each( var param:NodeParameter in (this as BaseNode).getParameters() ) {
 					pval = param.value;
-					
+
 					if (!(this is NoteNode) && pval.length > 25) {
 						pval = "..." + pval.substr(pval.length-25);
 					}
-					
+
 					_text.appendText("\n[" + param.name + "]: " + pval);
 				}
 			}
