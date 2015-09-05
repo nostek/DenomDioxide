@@ -51,7 +51,7 @@ package com.tbbgc.denom.saveload {
 							continue;
 						}
 						
-						node = new c(data);
+						node = new c(p);
 					} else {
 						node = new c();	
 					}

@@ -51,6 +51,7 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.dialogues.YesNoDialogue;
 	import com.tbbgc.denom.managers.PluginManager;
 	import com.tbbgc.denom.managers.SettingsManager;
+	import com.tbbgc.denom.managers.SoundsManager;
 	import com.tbbgc.denom.menu.Menu;
 	import com.tbbgc.denom.models.DataModel;
 	import com.tbbgc.denom.models.FlowModel;
@@ -112,10 +113,13 @@ package com.tbbgc.denom {
 			_blockSave = true;
 
 			new SettingsManager();
+			new SoundsManager();
+			new PluginManager();
 
 			DataModel.shared = new DenomShared(DataModel.ENTER_FRAME, new DenomFileManager(), new Dictionary());
 
 			DataModel.DRAW_LINE.add( onDrawLine );
+			DataModel.ON_PLUGINS_SET.add( buildMenu );
 
 			_dragging = false;
 
@@ -207,8 +211,9 @@ package com.tbbgc.denom {
 		}
 
 		private function onFirstYes():void {
-			DataModel.ON_FIRST_RUN.dispatch();
-
+			PluginManager.runFirst();
+			SoundsManager.runFirst();
+			
 			Load.runFirst( onPreLoad, onLoadComplete );
 		}
 

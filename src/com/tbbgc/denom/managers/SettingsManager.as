@@ -7,6 +7,7 @@ package com.tbbgc.denom.managers {
 	public class SettingsManager {
 		public static const SETTINGS_WINDOW:String 		= "window";
 		public static const SETTINGS_SOUNDS:String 		= "sounds";
+		public static const SETTINGS_PLUGINS:String 	= "plugins";
 		public static const SETTINGS_SOUNDS_DLG:String 	= "sounds_dlg";
 		public static const SETTINGS_PARAMS_DLG:String 	= "params_dlg";
 		public static const SETTINGS_JSON:String 		= "json";

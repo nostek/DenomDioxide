@@ -29,6 +29,8 @@ package com.tbbgc.denom.models {
 
 		public static var EDIT_PARAMETER:Signal = new Signal( INode, NodeParameter );
 
-		public static var ON_FIRST_RUN:Signal = new Signal();
+		public static var ON_SOUNDS_SET:Signal = new Signal();
+		
+		public static var ON_PLUGINS_SET:Signal = new Signal();
 	}
 }

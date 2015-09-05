@@ -2,6 +2,8 @@ package com.tbbgc.denom.menu {
 	import com.tbbgc.denom.dialogues.BaseDialogue;
 	import com.tbbgc.denom.dialogues.ParametersDialogue;
 	import com.tbbgc.denom.dialogues.SoundsDialogue;
+	import com.tbbgc.denom.managers.PluginManager;
+	import com.tbbgc.denom.managers.SoundsManager;
 
 	import org.osflash.signals.Signal;
 
@@ -42,6 +44,19 @@ package com.tbbgc.denom.menu {
 							name: "Save",
 							shortcut: "s",
 							callback: onSaveEvent
+						},
+						{
+							name: "Import",
+							children: [
+								{
+									name: "Plugins",
+									callback: onImportPlugins
+								},
+								{
+									name: "Sounds",
+									callback: onImportSounds
+								}
+							]
 						},
 						{
 							name: "Close",
@@ -203,6 +218,14 @@ package com.tbbgc.denom.menu {
 
 		private function onDebugAllEvent( e:Event ):void {
 			_onDebugAll.dispatch();
+		}
+		
+		private function onImportSounds( e:Event ):void {
+			SoundsManager.askFolder();
+		}
+		
+		private function onImportPlugins( e:Event ):void {
+			PluginManager.askFolder();
 		}
 	}
 }
