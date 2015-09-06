@@ -41,22 +41,22 @@ package com.tbbgc.denom.common.input {
 			_connections.splice( _connections.indexOf(conn), 1 );
 		}
 
-		public function run(...args):* {
+		public function run():* {
 			if (_run != null) {
-				return _run.apply( null, args );
+				return _run();
 			}
 		}
 
-		public function runConnections(...args):void {
+		public function runConnections():void {
 			const len:int = _connections.length;
 			for (var i:int = 0; i < len; i++) {
-				_connections[i].run.apply( null, args );
+				_connections[i].run();
 			}
 		}
 
-		public function runFirst(...args):* {
+		public function runFirst():* {
 			if (_connections.length > 0) {
-				return _connections[0].run.apply( null, args );
+				return _connections[0].run();
 			}
 			return null;
 		}

@@ -27,7 +27,7 @@ package com.tbbgc.denom.common.nodes.math {
 			return "ROUND";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			if( !_value.haveConnections ) {
 				return null;
 			}

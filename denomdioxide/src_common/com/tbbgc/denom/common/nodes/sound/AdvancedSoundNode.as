@@ -56,11 +56,11 @@ package com.tbbgc.denom.common.nodes.sound {
 			}
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _sound;
 		}
 
-		private function onLength(...args):* {
+		private function onLength():* {
 			return _sound.length;
 		}
 
@@ -98,12 +98,12 @@ package com.tbbgc.denom.common.nodes.sound {
 				}
 
 				if( data != null ) {
-					_sound = new DenomSoundAdvanced(data[0], data[1]);					
+					_sound = new DenomSoundAdvanced(data[0], data[1]);
 				} else {
 					this.logText("Could not load file: " + file);
 					_url.value = "";
 				}
-				
+
 				this.shared.decLoad();
 			}
 		}

@@ -36,7 +36,7 @@ package com.tbbgc.denom.common.nodes.events {
 
 		/////////////////////
 
-		private function onRun(...args):* {
+		private function onRun():* {
 			var data:Array = [];
 
 			const connections:Vector.<NodeInput> = _values.connections;

@@ -33,7 +33,7 @@ package com.tbbgc.denom.common.nodes.math {
 			return "ADD";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			if( _a.haveConnections && _b.haveConnections ) {
 				return (_a.runFirst() as Number) + (_b.runFirst() as Number);
 			}

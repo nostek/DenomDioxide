@@ -46,7 +46,7 @@ package com.tbbgc.denom.common.nodes.sound {
 			}
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _music;
 		}
 

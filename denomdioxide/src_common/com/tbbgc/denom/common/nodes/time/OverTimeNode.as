@@ -57,7 +57,7 @@ package com.tbbgc.denom.common.nodes.time {
 			return "OVER TIME";
 		}
 
-		private function onStart(...args):* {
+		private function onStart():* {
 			if( _timer == 0 ) {
 				this.shared.onEnterFrame.add(onUpdate);
 			}
@@ -65,7 +65,7 @@ package com.tbbgc.denom.common.nodes.time {
 			_timer = getTimer();
 		}
 
-		private function onStop(...args):* {
+		private function onStop():* {
 			if( _timer != 0 ) {
 				_timer = 0;
 
@@ -73,7 +73,7 @@ package com.tbbgc.denom.common.nodes.time {
 			}
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			const t:Number = _time.haveConnections ? _time.runFirst() as Number : 0;
 			const a:Number = _a.haveConnections ? _a.runFirst() as Number : 0;
 			const b:Number = _b.haveConnections ? _b.runFirst() as Number : 0;

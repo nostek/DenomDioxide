@@ -34,32 +34,32 @@ package com.tbbgc.denom.common.nodes.events {
 		public function get nodeName() : String {
 			return "EVENT";
 		}
-		
+
 		override public function test() : void {
 			onStart();
 		}
 
-		private function onStart(... args):* {
+		private function onStart():* {
 			_started = true;
 
-			_start.runConnections.apply(null, args);
+			_start.runConnections();
 		}
-		private function onStop(... args):* {
+		private function onStop():* {
 			_started = false;
 
-			_stop.runConnections.apply(null, args);
+			_stop.runConnections();
 		}
 
 		public function get eventName() : String {
 			return _name.value as String;
 		}
 
-		public function start(...args):void {
-			onStart.apply(null, args);
+		public function start():void {
+			onStart();
 		}
 
-		public function stop(...args):void {
-			onStop.apply(null, args);
+		public function stop():void {
+			onStop();
 		}
 
 		public function set isStarted(value:Boolean):void {

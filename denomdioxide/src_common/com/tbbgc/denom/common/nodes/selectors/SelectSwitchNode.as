@@ -31,7 +31,7 @@ package com.tbbgc.denom.common.nodes.selectors {
 			return "SWITCH NODE";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			if( _value.haveConnections && (_default.haveConnections || _nodes.haveConnections) ) {
 				const val:* = _value.runFirst();
 

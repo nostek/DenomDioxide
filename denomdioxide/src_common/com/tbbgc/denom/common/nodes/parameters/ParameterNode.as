@@ -36,7 +36,7 @@ package com.tbbgc.denom.common.nodes.parameters {
 			return "CODE PARAMETER";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			if (!Denom.IS_EDITOR) {
 				return this.shared.getParameter( _name.value, _global.value as Boolean );
 			}

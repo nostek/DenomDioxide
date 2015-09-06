@@ -13,7 +13,6 @@ package com.tbbgc.denom.common.nodes.sound {
 	public class PlaySoundNode extends BaseNode implements INode {
 		private var _play:NodeInput;
 		private var _stop:NodeInput;
-		private var _setVolume:NodeInput;
 //		private var _setRate:NodeInput;
 
 		private var _sound:NodeInput;
@@ -35,7 +34,6 @@ package com.tbbgc.denom.common.nodes.sound {
 		public function PlaySoundNode() {
 			_play = new NodeInput(this, "PLAY", onPlay);
 			_stop = new NodeInput(this, "STOP", onStop);
-			_setVolume = new NodeInput(this, "SET_VOLUME", onSetVolume);
 //			_setRate = new NodeInput(this, "SET_RATE", onSetRate);
 
 			_sound = new NodeInput(this, "SOUND", null, true);
@@ -48,7 +46,7 @@ package com.tbbgc.denom.common.nodes.sound {
 			_maxInstances = new NodeParameter("MAX_INSTANCES", 1, onInstancesChanged);
 			_stopOldestSound = new NodeParameter("STOP_OLDEST_SOUND", false);
 
-			left( _play, _stop, _setVolume/*, _setRate*/ );
+			left( _play, _stop/*, _setRate*/ );
 
 			right( _sound, _volume, /*_rate,*/ _onPlay, _onStop );
 
@@ -74,7 +72,7 @@ package com.tbbgc.denom.common.nodes.sound {
 			onStop();
 		}
 
-		private function onPlay(...args):* {
+		private function onPlay():* {
 			var index:int = availableIndex;
 
 			if( index == -1 && _stopOldestSound.value as Boolean ) {
@@ -113,7 +111,7 @@ package com.tbbgc.denom.common.nodes.sound {
 			}
 		}
 
-		private function onStop(...args):* {
+		private function onStop():* {
 			var instance:ISoundChannel;
 
 			var len:int = _instances.length;
@@ -124,20 +122,6 @@ package com.tbbgc.denom.common.nodes.sound {
 					instance.stop();
 
 					_instances[i] = null;
-				}
-			}
-		}
-
-		private function onSetVolume(...args):* {
-			if( args.length != 1 ) return null;
-
-			const volume:Number = args[0] as Number;
-
-			const len:int = _instances.length;
-
-			for( var i:int = 0; i < len; i++ ) {
-				if( _instances[i] != null ) {
-					_instances[i].volume = volume;
 				}
 			}
 		}

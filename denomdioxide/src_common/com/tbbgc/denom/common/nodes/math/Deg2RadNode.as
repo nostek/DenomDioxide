@@ -31,7 +31,7 @@ package com.tbbgc.denom.common.nodes.math {
 			return "DEG2RAD";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			if( _value.haveConnections ) {
 				return deg2rad(_value.runFirst() as Number);
 			}

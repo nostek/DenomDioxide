@@ -9,17 +9,15 @@ package com.tbbgc.denom.common.nodes.values {
 	 */
 	public class TextNode extends BaseNode implements INode {
 		private var _get:NodeInput;
-		private var _set:NodeInput;
 
 		private var _text:NodeParameter;
 
 		public function TextNode() {
 			_get = new NodeInput(this, "GET", onGet);
-			_set = new NodeInput(this, "SET", onSet);
 
 			_text = new NodeParameter("TEXT", "Test Text");
 
-			left( _get, _set );
+			left( _get );
 
 			parameters( _text );
 
@@ -30,16 +28,8 @@ package com.tbbgc.denom.common.nodes.values {
 			return "TEXT";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _text.value as String;
-		}
-
-		private function onSet(...args):* {
-			if( args.length != 1 ) return null;
-
-			const value:String = args[0] as String;
-
-			this.setParameter(null, value);
 		}
 	}
 }

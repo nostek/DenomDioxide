@@ -36,7 +36,7 @@ package com.tbbgc.denom.common.nodes.values {
 			return "RANDOM";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			const a:Number = _from.value as Number;
 			const b:Number = _to.value as Number;
 			const val:Number = a + (b - a) * Math.random();

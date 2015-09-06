@@ -46,7 +46,7 @@ package com.tbbgc.denom.common.nodes.values {
 			return "GRAPH";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			var t:Number = (_t.haveConnections ? _t.runFirst() as Number : 0.5);
 
 			const a:Number = _from.value as Number;

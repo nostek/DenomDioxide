@@ -9,17 +9,15 @@ package com.tbbgc.denom.common.nodes.values {
 	 */
 	public class NumberNode extends BaseNode implements INode {
 		private var _get:NodeInput;
-		private var _set:NodeInput;
 
 		private var _number:NodeParameter;
 
 		public function NumberNode() {
 			_get = new NodeInput(this, "GET", onGet);
-			_set = new NodeInput(this, "SET", onSet);
 
 			_number = new NodeParameter("VALUE", 2000);
 
-			left( _get, _set );
+			left( _get );
 
 			parameters( _number );
 
@@ -30,16 +28,8 @@ package com.tbbgc.denom.common.nodes.values {
 			return "NUMBER";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _number.value as Number;
-		}
-
-		private function onSet(...args):* {
-			if( args.length != 1 ) return null;
-
-			const value:Number = args[0] as Number;
-
-			this.setParameter(null, value);
 		}
 	}
 }

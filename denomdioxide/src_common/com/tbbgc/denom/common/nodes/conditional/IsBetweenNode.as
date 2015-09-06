@@ -36,7 +36,7 @@ package com.tbbgc.denom.common.nodes.conditional {
 			onRun();
 		}
 
-		private function onRun(...args):* {
+		private function onRun():* {
 			if( _a.haveConnections && _b.haveConnections && _value.haveConnections && _onIs.haveConnections ) {
 				const a:Number = _a.runFirst() as Number;
 				const b:Number = _b.runFirst() as Number;

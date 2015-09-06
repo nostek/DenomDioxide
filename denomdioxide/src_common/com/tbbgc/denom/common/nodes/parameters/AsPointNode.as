@@ -31,14 +31,14 @@ package com.tbbgc.denom.common.nodes.parameters {
 			return "AS POINT";
 		}
 
-		private function onX(...args):* {
+		private function onX():* {
 			if( _target.haveConnections ) {
 				return (_target.runFirst() as Point).x;
 			}
 			return 0;
 		}
 
-		private function onY(...args):* {
+		private function onY():* {
 			if( _target.haveConnections ) {
 				return (_target.runFirst() as Point).y;
 			}

@@ -35,7 +35,7 @@ package com.tbbgc.denom.common.nodes.values {
 			return "BETWEEN";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			var a:Number = _a.runFirst() as Number;
 			var b:Number = _b.runFirst() as Number;
 			var t:Number = _t.runFirst() as Number;

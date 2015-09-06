@@ -30,8 +30,8 @@ package com.tbbgc.denom.common.nodes.math {
 		public function get nodeName() : String {
 			return "INVERT";
 		}
-		
-		private function onGet(...args):* {
+
+		private function onGet():* {
 			if( _value.haveConnections ) {
 				return (-(_value.runFirst() as Number)) as Number;
 			}

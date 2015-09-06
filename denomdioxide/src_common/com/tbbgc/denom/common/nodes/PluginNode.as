@@ -92,7 +92,7 @@ package com.tbbgc.denom.common.nodes {
 			return (n != null && n.haveConnections);
 		}
 
-		private function onLeft(id:String, args:Array):* {
+		private function onLeft(id:String):* {
 			if (!Denom.IS_EDITOR) {
 				return this.shared.runPlugin(id, this);
 			}

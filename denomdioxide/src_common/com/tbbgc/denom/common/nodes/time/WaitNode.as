@@ -51,13 +51,13 @@ package com.tbbgc.denom.common.nodes.time {
 			return "WAIT";
 		}
 
-		private function onStart(...args):* {
+		private function onStart():* {
 			_timer = getTimer() + _time.runFirst() as Number;
 
 			this.shared.onEnterFrame.add( onUpdate );
 		}
 
-		private function onStop(...args):* {
+		private function onStop():* {
 			if( _timer != 0 ) {
 				_timer = 0;
 

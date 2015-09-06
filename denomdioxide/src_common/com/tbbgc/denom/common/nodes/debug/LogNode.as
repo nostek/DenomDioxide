@@ -31,7 +31,7 @@ package com.tbbgc.denom.common.nodes.debug {
 			return "LOG";
 		}
 
-		private function onRun(...args):* {
+		private function onRun():* {
 			this.logText( _value.runFirst() );
 		}
 	}

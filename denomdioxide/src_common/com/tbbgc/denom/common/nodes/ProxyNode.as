@@ -26,8 +26,8 @@ package com.tbbgc.denom.common.nodes {
 			return "PROXY";
 		}
 
-		private function onIn(...args):* {
-			_out.runConnections.apply(null, args);
+		private function onIn():* {
+			_out.runConnections();
 		}
 	}
 }

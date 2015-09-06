@@ -34,7 +34,7 @@ package com.tbbgc.denom.common.nodes.selectors {
 			return "RANDOM WEIGHT";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _value.runFirst();
 		}
 	}

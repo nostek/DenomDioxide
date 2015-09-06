@@ -9,17 +9,15 @@ package com.tbbgc.denom.common.nodes.values {
 	 */
 	public class BooleanNode extends BaseNode implements INode {
 		private var _get:NodeInput;
-		private var _set:NodeInput;
 
 		private var _bool:NodeParameter;
 
 		public function BooleanNode() {
 			_get = new NodeInput(this, "GET", onGet);
-			_set = new NodeInput(this, "SET", onSet);
 
 			_bool = new NodeParameter("VALUE", true);
 
-			left( _get, _set );
+			left( _get );
 
 			parameters( _bool );
 
@@ -30,16 +28,8 @@ package com.tbbgc.denom.common.nodes.values {
 			return "BOOLEAN";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _bool.value as Boolean;
-		}
-
-		private function onSet(...args):* {
-			if( args.length != 1 ) return null;
-
-			const value:Boolean = args[0] as Boolean;
-
-			this.setParameter(null, value);
 		}
 	}
 }

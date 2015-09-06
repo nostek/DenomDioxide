@@ -4,7 +4,6 @@ package com.tbbgc.denom.node {
 	import com.tbbgc.denom.common.interfaces.INodeEvent;
 	import com.tbbgc.denom.common.models.AvailableNodes;
 	import com.tbbgc.denom.common.nodes.NoteNode;
-	import com.tbbgc.denom.common.nodes.conditional.OverLevelValueNode;
 	import com.tbbgc.denom.common.nodes.events.EventNode;
 	import com.tbbgc.denom.common.nodes.events.PostEventNode;
 	import com.tbbgc.denom.common.nodes.parameters.ParameterNode;
@@ -113,7 +112,6 @@ package com.tbbgc.denom.node {
 				case SelectRandomWeightNode:
 				case SelectSwitchValueNode:
 				case SelectRandomNode:
-				case OverLevelValueNode:
 				case NoteNode:
 					ctxextra = new ContextMenuItem("Change: [" + (this as BaseNode).getParameters()[0].name + "]");
 					ctxextra.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onChangeParameter);

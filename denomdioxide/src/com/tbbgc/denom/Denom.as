@@ -8,12 +8,9 @@ package com.tbbgc.denom {
 	import com.tbbgc.denom.common.managers.DenomFileManager;
 	import com.tbbgc.denom.common.models.AvailableNodes;
 	import com.tbbgc.denom.common.models.DenomShared;
-	import com.tbbgc.denom.common.nodes.GetSetNode;
 	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.nodes.conditional.IfNode;
 	import com.tbbgc.denom.common.nodes.conditional.IsBetweenNode;
-	import com.tbbgc.denom.common.nodes.conditional.IsOverLevelNode;
-	import com.tbbgc.denom.common.nodes.conditional.OverLevelValueNode;
 	import com.tbbgc.denom.common.nodes.debug.LogNode;
 	import com.tbbgc.denom.common.nodes.events.EventNode;
 	import com.tbbgc.denom.common.nodes.events.PostEventNode;
@@ -281,11 +278,9 @@ package com.tbbgc.denom {
 			var parameters:Array = [];
 			var selectrandom:Array = [];
 			var selectswitch:Array = [];
-			var selectlevel:Array = [];
 			var sound:Array = [];
 			var math:Array = [];
 			var conditions:Array = [];
-			var setter:Array = [];
 			var plugins:Array = [];
 			var other:Array = [];
 
@@ -323,11 +318,6 @@ package com.tbbgc.denom {
 						parameters.push(create(node));
 					break;
 
-					case IsOverLevelNode:
-					case OverLevelValueNode:
-						selectlevel.push(create(node));
-					break;
-
 					case SelectRandomNode:
 					case SelectRandomWeightNode:
 						selectrandom.push(create(node));
@@ -354,10 +344,6 @@ package com.tbbgc.denom {
 						conditions.push(create(node));
 					break;
 
-					case GetSetNode:
-						setter.push(create(node));
-					break;
-
 					case SelectSwitchNode:
 					case SelectSwitchValueNode:
 						selectswitch.push(create(node));
@@ -380,15 +366,12 @@ package com.tbbgc.denom {
 										create(SelectSequenceNode)
 									];
 
-			conditions.unshift( createsub("Level", selectlevel) );
-
 			_menu = new ContextMenu();
 			_menu.items = 	[
 								createsub("Events", events),
 								createsub("Selectors", selectors),
 								createsub("Conditional", conditions),
 								createsub("Values", values),
-								createsub("Setters", setter),
 								createsub("Math", math),
 								createsub("Time", time),
 								createsub("Parameters", parameters),

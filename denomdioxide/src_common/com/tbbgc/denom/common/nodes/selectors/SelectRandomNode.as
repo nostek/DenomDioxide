@@ -38,7 +38,7 @@ package com.tbbgc.denom.common.nodes.selectors {
 			return "SELECT RANDOM";
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			const len:int = _nodes.connections.length;
 
 			if( len > 0 ) {

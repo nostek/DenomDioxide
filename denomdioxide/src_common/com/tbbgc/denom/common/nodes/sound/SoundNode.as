@@ -53,11 +53,11 @@ package com.tbbgc.denom.common.nodes.sound {
 			}
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			return _sound;
 		}
 
-		private function onLength(...args):* {
+		private function onLength():* {
 			return _sound.length;
 		}
 

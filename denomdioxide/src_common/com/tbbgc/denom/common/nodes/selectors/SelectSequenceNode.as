@@ -33,11 +33,11 @@ package com.tbbgc.denom.common.nodes.selectors {
 			return "SELECT SEQUENCE";
 		}
 
-		private function onReset(...args):* {
+		private function onReset():* {
 			_index = 0;
 		}
 
-		private function onGet(...args):* {
+		private function onGet():* {
 			const len:int = _value.connections.length;
 
 			if( len > 0 ) {

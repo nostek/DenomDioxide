@@ -5,9 +5,9 @@ package com.tbbgc.denom.common.interfaces {
 	public interface INodeEvent {
 		function get eventName() : String;
 
-		function start(...args):void;
+		function start():void;
 
-		function stop(...args):void;
+		function stop():void;
 
 		function set isStarted( value:Boolean ):void;
 		function get isStarted():Boolean;

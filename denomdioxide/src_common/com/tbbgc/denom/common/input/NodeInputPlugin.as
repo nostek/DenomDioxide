@@ -22,9 +22,9 @@ package com.tbbgc.denom.common.input {
 			return _def;
 		}
 
-		override public function run(...args):* {
+		override public function run():* {
 			if (_run != null) {
-				return _run( _id, args );
+				return _run(_id);
 			}
 		}
 	}
