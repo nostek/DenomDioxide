@@ -15,26 +15,32 @@ package com.tbbgc.denom {
 	public class Denom {
 		public static const IS_EDITOR:Boolean = false;
 
+		private var _fileManager:DenomFileManager;
+
+		private var _onEnterFrame:Signal;
 		private var _globalParameters:Dictionary;
 		private var _plugins:Dictionary;
-		private var _enterFrame:Signal;
-		private var _fileManager:DenomFileManager;
 
 		private var _version:int;
 		private var _strings:Array;
 		private var _flows:Dictionary;
 
 		public function Denom() {
+			_onEnterFrame = new Signal();
 			_globalParameters = new Dictionary();
 			_plugins = new Dictionary();
 		}
 
-		public function set enterFrame(signal:Signal):void {
-			_enterFrame = signal;
+		public function dispose():void {
+			_onEnterFrame.removeAll();
 		}
 
 		public function set fileManager(files:DenomFileManager):void {
 			_fileManager = files;
+		}
+
+		public function onEnterFrame():void {
+			_onEnterFrame.dispatch();
 		}
 
 		public function load( data:Object ):void {
@@ -55,7 +61,7 @@ package com.tbbgc.denom {
 			var data:Array = _flows[name];
 
 			if( data != null ) {
-				var shared:DenomShared = new DenomShared(_enterFrame, _fileManager, _globalParameters, _plugins);
+				var shared:DenomShared = new DenomShared(_onEnterFrame, _fileManager, _globalParameters, _plugins);
 
 				var nodes:Vector.<BaseNode> = null;
 

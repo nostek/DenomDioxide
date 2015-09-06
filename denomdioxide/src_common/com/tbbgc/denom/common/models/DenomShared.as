@@ -11,6 +11,7 @@ package com.tbbgc.denom.common.models {
 	 */
 	public class DenomShared {
 		private var _onLoaded:OnceSignal;
+		private var _onMainEnterFrame:Signal;
 		private var _onEnterFrame:Signal;
 		private var _onPostEvent:Signal;
 
@@ -22,26 +23,35 @@ package com.tbbgc.denom.common.models {
 
 		private var _count:int;
 
-		public function DenomShared( onEnterFrame:Signal, fileManager:IFileManager, globalParameters:Dictionary, plugins:Dictionary ) {
-			_onEnterFrame = onEnterFrame;
+		public function DenomShared( onMainEnterFrame:Signal, fileManager:IFileManager, globalParameters:Dictionary, plugins:Dictionary ) {
+			_onMainEnterFrame = onMainEnterFrame;
 			_fileManager = fileManager;
 			_globalParameters = globalParameters;
 			_plugins = plugins;
 
+			_onEnterFrame = new Signal();
 			_onLoaded = new OnceSignal();
 			_onPostEvent = new Signal(String, Array);
 
 			_parameters = new Dictionary();
 
 			_count = 0;
+
+			_onMainEnterFrame.add(update);
 		}
 
 		public function dispose():void {
-			_parameters = null;
-			_plugins = null;
+			_onMainEnterFrame.remove(update);
+			_onMainEnterFrame = null;
 
+			_onEnterFrame.removeAll();
 			_onLoaded.removeAll();
 			_onPostEvent.removeAll();
+
+			_fileManager = null;
+			_globalParameters = null;
+			_parameters = null;
+			_plugins = null;
 		}
 
 		public function get onEnterFrame():Signal {
@@ -90,6 +100,10 @@ package com.tbbgc.denom.common.models {
 				return f(node);
 			}
 			return null;
+		}
+
+		private function update():void {
+			_onEnterFrame.dispatch();
 		}
 	}
 }

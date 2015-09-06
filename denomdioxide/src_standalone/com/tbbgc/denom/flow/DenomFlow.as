@@ -32,6 +32,7 @@ package com.tbbgc.denom.flow {
 			_hashEvent = null;
 
 			_shared.dispose();
+			_shared = null;
 
 			return null;
 		}
@@ -84,8 +85,12 @@ package com.tbbgc.denom.flow {
 			return false;
 		}
 
-		public function setParameter( id:String, global:Boolean, value:* ):void {
-			_shared.setParameter(id, global, value);
+		public function setGlobalParameter( id:String, value:* ):void {
+			_shared.setParameter(id, true, value);
+		}
+
+		public function setParameter( id:String, value:* ):void {
+			_shared.setParameter(id, false, value);
 		}
 	}
 }
