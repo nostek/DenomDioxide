@@ -10,10 +10,10 @@ package com.tbbgc.denom.common.nodes {
 	 * @author Simon
 	 */
 	public class PluginNode extends BaseNode implements INode, INodePlugin {
-		private var _data:Object;
+		private var _name:String;
 
 		public function PluginNode(data:Object) {
-			_data = data;
+			_name = data["name"];
 
 			var len:int;
 			var i:int;
@@ -68,11 +68,7 @@ package com.tbbgc.denom.common.nodes {
 		}
 
 		public function get pluginName() : String {
-			return _data["name"];
-		}
-
-		public function get pluginData() : Object {
-			return _data;
+			return _name;
 		}
 
 		public function runRight(name:String):* {

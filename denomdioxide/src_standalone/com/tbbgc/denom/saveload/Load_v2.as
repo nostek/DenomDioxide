@@ -20,6 +20,8 @@ package com.tbbgc.denom.saveload {
 			var i:int;
 			var p:Object;
 
+			var plugins:Object = {};
+
 			const len:int = view.length;
 
 			for (i = 0; i < len; i++) {
@@ -28,7 +30,7 @@ package com.tbbgc.denom.saveload {
 				c = getClass( unpackString(strings, obj[SLKeys.NODE_ID]) );
 
 				if (c == PluginNode) {
-					p = JSON.parse(unpackString(strings, obj[SLKeys.NODE_PLUGIN_DATA]));
+					p = getPlugin(plugins, strings, obj);
 
 					if (p == null) {
 						continue;
@@ -108,6 +110,20 @@ package com.tbbgc.denom.saveload {
 
 		private static function unpackString( strings:Array, i:int ):* {
 			return strings[i];
+		}
+
+		private static function getPlugin( plugins:Object, strings:Array, obj:Object ):Object {
+			var name:String = unpackString(strings, obj[SLKeys.NODE_PLUGIN_NAME]);
+
+			if (plugins[name] != null) {
+				return plugins[name];
+			}
+
+			var json:Object = JSON.parse(unpackString(strings, obj[SLKeys.NODE_PLUGIN_DATA]));
+
+			plugins[name] = json;
+
+			return json;
 		}
 	}
 }
