@@ -1,82 +1,64 @@
 package com.tbbgc.denom.saveload {
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.models.AvailableNodes;
+	import com.tbbgc.denom.common.models.DenomShared;
 	import com.tbbgc.denom.common.nodes.PluginNode;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
-	import com.tbbgc.denom.managers.PluginManager;
-	import com.tbbgc.denom.models.FlowModel;
 	import com.tbbgc.denom.node.BaseNode;
 
 	import flash.utils.getQualifiedClassName;
 	/**
-	 * @author Simon
+	 * @author simon
 	 */
 	public class Load_v2 {
-		public static function run(data:Object):Vector.<FlowModel> {
-			var flows:Vector.<FlowModel> = new Vector.<FlowModel>();
+		public static function run(shared:DenomShared, strings:Array, view:Object):Vector.<BaseNode> {
+			var nodes:Vector.<BaseNode> = new Vector.<BaseNode>();
 
-			var strings:Array = data[SLKeys.MAIN_STRINGS];
-
-			var views:Array = data[SLKeys.MAIN_VIEWS];
-
-			var flow:FlowModel;
 			var obj:Object;
 			var c:Class;
 			var node:BaseNode;
-			var a:Array;
-			var len:int;
 			var i:int;
 			var p:Object;
 
-			for each( var view:Object in views ) {
-				flow = new FlowModel();
-				flow.name = unpackString(strings, view[SLKeys.FLOW_NAME]);
+			const len:int = view.length;
 
-				flow.nodes = new Vector.<BaseNode>();
+			for (i = 0; i < len; i++) {
+				obj = view[i];
 
-				a = view[SLKeys.FLOW_NODES];
-				len = a.length;
+				c = getClass( unpackString(strings, obj[SLKeys.NODE_ID]) );
 
-				for (i = 0; i < len; i++) {
-					obj = a[i];
+				if (c == PluginNode) {
+					p = JSON.parse(unpackString(strings, obj[SLKeys.NODE_PLUGIN_DATA]));
 
-					c = getClass( unpackString(strings, obj[SLKeys.NODE_ID]) );
-
-					if (c == PluginNode) {
-						p = PluginManager.getPluginByName(unpackString(strings, obj[SLKeys.NODE_PLUGIN_NAME]));
-
-						if (p == null) {
-							continue;
-						}
-
-						node = new c(p);
-					} else {
-						node = new c();
+					if (p == null) {
+						continue;
 					}
 
-					node.x = obj[SLKeys.NODE_X];
-					node.y = obj[SLKeys.NODE_Y];
-					flow.nodes.push(node);
-
-					if (obj[SLKeys.NODE_PARAMS] != null) {
-						loadParameters(strings, node, obj[SLKeys.NODE_PARAMS]);
-					}
+					node = new c(p);
+				} else {
+					node = new c();
 				}
 
-				for (i = 0; i < len; i++) {
-					obj = a[i];
+				node.shared = shared;
 
-					node = flow.nodes[i];
+				nodes.push(node);
 
-					if (obj[SLKeys.NODE_INPUTS] != null) {
-						loadInputs(strings, node, obj[SLKeys.NODE_INPUTS], flow.nodes);
-					}
+				if (obj[SLKeys.NODE_PARAMS] != null) {
+					loadParameters(strings, node, obj[SLKeys.NODE_PARAMS]);
 				}
-
-				flows.push( flow );
 			}
 
-			return flows;
+			for (i = 0; i < len; i++) {
+				obj = view[i];
+
+				node = nodes[i];
+
+				if (obj[SLKeys.NODE_INPUTS] != null) {
+					loadInputs(strings, node, obj[SLKeys.NODE_INPUTS], nodes);
+				}
+			}
+
+			return nodes;
 		}
 
 		private static function loadInputs( strings:Array, node:BaseNode, data:Object, nodes:Vector.<BaseNode> ):void {

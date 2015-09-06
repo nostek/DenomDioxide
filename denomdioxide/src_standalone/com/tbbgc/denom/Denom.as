@@ -1,117 +1,80 @@
 package com.tbbgc.denom {
-	import com.stardoll.codebase.layout.CB_layoutDB;
+	import com.tbbgc.denom.common.managers.DenomFileManager;
+	import com.tbbgc.denom.common.models.DenomShared;
 	import com.tbbgc.denom.flow.DenomFlow;
-	import com.tbbgc.denom.managers.FileManager;
 	import com.tbbgc.denom.node.BaseNode;
-	import com.tbbgc.denom.nodes.carbon.CarbonNode;
-	import com.tbbgc.denom.nodes.starling.ScreenSizeNode;
-	import com.tbbgc.denom.ns.DenomPrivate;
-	import com.tbbgc.denom.utils.Load;
+	import com.tbbgc.denom.saveload.Load_v2;
+	import com.tbbgc.denom.saveload.SLKeys;
 
 	import org.osflash.signals.Signal;
+
+	import flash.utils.Dictionary;
 	/**
 	 * @author simonrodriguez
 	 */
 	public class Denom {
-		private var _load:Load;
+		public static const IS_EDITOR:Boolean = false;
 
-		private var _flows:Vector.<FlowModel>;
+		private var _globalParameters:Dictionary;
+		private var _plugins:Dictionary;
+		private var _enterFrame:Signal;
+		private var _fileManager:DenomFileManager;
 
-		private var _references:Vector.<DenomFlow>;
+		private var _version:int;
+		private var _strings:Array;
+		private var _flows:Dictionary;
 
-		public function Denom( enableReload:Boolean=true ) {
-			if( enableReload ) {
-				_references = new Vector.<DenomFlow>();
-			}
-
-			_load = new Load();
+		public function Denom() {
+			_globalParameters = new Dictionary();
+			_plugins = new Dictionary();
 		}
 
-		public function registerFileManager( base:String, remote:String=null):void {
-			BaseNode.FILE = new FileManager();
-			BaseNode.FILE.base = base;
-			BaseNode.FILE.remote = remote;
+		public function set enterFrame(signal:Signal):void {
+			_enterFrame = signal;
 		}
 
-		public function registerEnterFrame( signal:Signal ):void {
-			BaseNode.ENTER_FRAME = signal;
+		public function set fileManager(files:DenomFileManager):void {
+			_fileManager = files;
 		}
 
-		public function registerScreenSize( width:int, height:int ):void {
-			ScreenSizeNode.WIDTH = width;
-			ScreenSizeNode.HEIGHT = height;
-		}
+		public function load( data:Object ):void {
+			_version = data[SLKeys.MAIN_VERSION];
 
-		public function registerLayoutDB( layoutDB:CB_layoutDB ):void {
-			CarbonNode.LAYOUTDB = layoutDB;
-		}
+			if (_version == 2) {
+				_strings = data[SLKeys.MAIN_STRINGS];
 
-		public function setJSON( json:Object ):void {
-			var len:int = 0;
-			for each( var obj:Object in json["views"] ) {
-				len++;
-			}
+				_flows = new Dictionary();
 
-			_flows = new Vector.<FlowModel>( len, true );
-
-			var model:FlowModel;
-
-			len = 0;
-			for each( obj in json["views"] ) {
-				model = new FlowModel;
-				model.name = obj["name"];
-				model.nodes = obj["nodes"];
-
-				_flows[len] = model;
-
-				len++;
-			}
-
-			if( enabledReload ) {
-				for( len = _references.length-1; len >= 0; len-- ) {
-					if( _references[len].isDisposed ) {
-						_references.splice(len, 1);
-					} else {
-						_references[len].DenomPrivate::setup( _load.run( getFlowData(_references[len].name), _references[len] ) );
-					}
+				for each (var o:Object in data[SLKeys.MAIN_VIEWS]) {
+					_flows[ _strings[o[SLKeys.FLOW_NAME]] ] = o[SLKeys.FLOW_NODES];
 				}
 			}
 		}
 
 		public function getFlow( name:String ):DenomFlow {
-			var data:Array = getFlowData( name );
-			if( data != null ) {
-				var flow:DenomFlow = new DenomFlow( enabledReload ? name : null );
-				flow.DenomPrivate::setup( _load.run( data, flow ) );
+			var data:Array = _flows[name];
 
-				if( enabledReload ) {
-					_references.push( flow );
+			if( data != null ) {
+				var shared:DenomShared = new DenomShared(_enterFrame, _fileManager, _globalParameters, _plugins);
+
+				var nodes:Vector.<BaseNode> = null;
+
+				if (_version == 2) {
+					nodes = Load_v2.run(shared, _strings, data);
 				}
 
-				return flow;
+				if (nodes ) {
+					var flow:DenomFlow = new DenomFlow(shared, nodes);
+
+					return flow;
+				}
 			}
 
 			return null;
 		}
 
-		private function get enabledReload():Boolean { return (_references!=null); }
-
-		private function getFlowData( name:String ):Array {
-			const len:int = _flows.length;
-			for( var i:int = 0; i < len; i++ ) {
-				if( _flows[i].name == name ) {
-					return _flows[i].nodes;
-				}
-			}
-
-			return null;
+		public function registerPlugin( id:String, callback:Function ):void {
+			_plugins[id] = callback;
 		}
 	}
-}
-
-
-
-internal class FlowModel {
-	public var name:String;
-	public var nodes:Array;
 }

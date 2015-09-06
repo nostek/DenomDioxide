@@ -1,19 +1,12 @@
 package com.tbbgc.denom.node {
-	import com.tbbgc.denom.flow.DenomFlow;
-	import com.tbbgc.denom.input.NodeInput;
-	import com.tbbgc.denom.managers.FileManager;
-	import com.tbbgc.denom.parameters.NodeParameter;
-
-	import org.osflash.signals.Signal;
+	import com.tbbgc.denom.common.input.NodeInput;
+	import com.tbbgc.denom.common.models.DenomShared;
+	import com.tbbgc.denom.common.parameters.NodeParameter;
 	/**
 	 * @author simonrodriguez
 	 */
 	public class BaseNode {
-		public static var FILE:FileManager;
-
-		public static var ENTER_FRAME:Signal;
-
-		protected var _flow:DenomFlow;
+		private var _shared:DenomShared;
 
 		private var _left:Vector.<NodeInput>;
 		private var _right:Vector.<NodeInput>;
@@ -23,9 +16,17 @@ package com.tbbgc.denom.node {
 
 		}
 
-		public function set flow(flow:DenomFlow):void {
-			_flow = flow;
+		////////////////////////////////
+
+		public function set shared(shared:DenomShared):void {
+			_shared = shared;
 		}
+
+		public function get shared():DenomShared {
+			return _shared;
+		}
+
+		////////////////////////////////
 
 		protected function left( ...args ):void {
 			const len:int = args.length;
@@ -57,6 +58,8 @@ package com.tbbgc.denom.node {
 			}
 		}
 
+		////////////////////////////////
+
 		public function setParameter(name : String, value : *) : void {
 			if( _parameters != null && _parameters.length > 0 ) {
 				if( _parameters.length == 1 || _parameters[0].name == name  || name == null ) {
@@ -87,9 +90,41 @@ package com.tbbgc.denom.node {
 			return null;
 		}
 
-		protected static function get enterFrame():Signal {
-			return ENTER_FRAME;
+		public function getParameterByName(name:String):NodeParameter {
+			const len:int = _parameters.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_parameters[i].name == name) {
+					return _parameters[i];
+				}
+			}
+			return null;
 		}
+
+		public function getLeftByName(name:String):NodeInput {
+			const len:int = _left.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_left[i].name == name) {
+					return _left[i];
+				}
+			}
+			return null;
+		}
+
+		public function getRightByName(name:String):NodeInput {
+			const len:int = _right.length;
+			for (var i:int = 0; i < len; i++) {
+				if (_right[i].name == name) {
+					return _right[i];
+				}
+			}
+			return null;
+		}
+
+		public function getLeft():Vector.<NodeInput> { return _left; }
+		public function getRight():Vector.<NodeInput> { return _right; }
+		public function getParameters():Vector.<NodeParameter> { return _parameters; }
+
+		////////////////////////////////
 
 		public function reset():void {
 
@@ -102,9 +137,5 @@ package com.tbbgc.denom.node {
 		protected function logText( text:* ):void {
 			trace( "LogNode:", text );
 		}
-
-		public function getLeft():Vector.<NodeInput> { return _left; }
-		public function getRight():Vector.<NodeInput> { return _right; }
-		public function getParameters():Vector.<NodeParameter> { return _parameters; }
 	}
 }

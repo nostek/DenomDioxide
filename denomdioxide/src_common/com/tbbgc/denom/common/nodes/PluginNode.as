@@ -3,12 +3,13 @@ package com.tbbgc.denom.common.nodes {
 	import com.tbbgc.denom.common.input.NodeInput;
 	import com.tbbgc.denom.common.input.NodeInputPlugin;
 	import com.tbbgc.denom.common.interfaces.INode;
+	import com.tbbgc.denom.common.interfaces.INodePlugin;
 	import com.tbbgc.denom.common.parameters.NodeParameter;
 	import com.tbbgc.denom.node.BaseNode;
 	/**
 	 * @author Simon
 	 */
-	public class PluginNode extends BaseNode implements INode {
+	public class PluginNode extends BaseNode implements INode, INodePlugin {
 		private var _data:Object;
 
 		public function PluginNode(data:Object) {
@@ -74,21 +75,26 @@ package com.tbbgc.denom.common.nodes {
 			return _data;
 		}
 
-		public function runRight(name:String, args:Array):* {
+		public function runRight(name:String):* {
 			var n:NodeInput = this.getRightByName(name);
 			if (n != null && n.haveConnections) {
 				if (n.single) {
-					return n.runFirst.apply(null, args);
+					return n.runFirst();
 				} else {
-					n.runConnections.apply(null, args);
+					n.runConnections();
 				}
 			}
 			return null;
 		}
 
+		public function haveRight(name:String):Boolean {
+			var n:NodeInput = this.getRightByName(name);
+			return (n != null && n.haveConnections);
+		}
+
 		private function onLeft(id:String, args:Array):* {
 			if (!Denom.IS_EDITOR) {
-				return this.shared.runPlugin(id, this, args);
+				return this.shared.runPlugin(id, this);
 			}
 			return getLeftPluginById(id).def;
 		}

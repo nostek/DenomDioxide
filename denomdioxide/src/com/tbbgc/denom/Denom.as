@@ -116,7 +116,7 @@ package com.tbbgc.denom {
 			new SoundsManager();
 			new PluginManager();
 
-			DataModel.shared = new DenomShared(DataModel.ENTER_FRAME, new DenomFileManager(), new Dictionary());
+			DataModel.shared = new DenomShared(DataModel.ENTER_FRAME, new DenomFileManager(), new Dictionary(), new Dictionary());
 
 			DataModel.DRAW_LINE.add( onDrawLine );
 			DataModel.ON_PLUGINS_SET.add( buildMenu );
