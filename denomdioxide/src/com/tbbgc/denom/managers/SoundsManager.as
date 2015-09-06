@@ -1,4 +1,5 @@
 package com.tbbgc.denom.managers {
+	import com.tbbgc.denom.common.managers.DenomFileManager;
 	import com.tbbgc.denom.models.DataModel;
 
 	import flash.events.Event;
@@ -52,7 +53,7 @@ package com.tbbgc.denom.managers {
 
 			SettingsManager.setItem( SettingsManager.SETTINGS_SOUNDS, path );
 
-			DataModel.shared.fileManager.base = path;
+			(DataModel.shared.fileManager as DenomFileManager).base = path;
 
 			DataModel.ON_SOUNDS_SET.dispatch();
 		}

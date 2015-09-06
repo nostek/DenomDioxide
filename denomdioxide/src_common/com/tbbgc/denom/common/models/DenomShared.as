@@ -1,5 +1,5 @@
 package com.tbbgc.denom.common.models {
-	import com.tbbgc.denom.common.managers.DenomFileManager;
+	import com.tbbgc.denom.common.interfaces.IFileManager;
 	import com.tbbgc.denom.common.nodes.PluginNode;
 
 	import org.osflash.signals.OnceSignal;
@@ -14,7 +14,7 @@ package com.tbbgc.denom.common.models {
 		private var _onEnterFrame:Signal;
 		private var _onPostEvent:Signal;
 
-		private var _fileManager:DenomFileManager;
+		private var _fileManager:IFileManager;
 
 		private var _globalParameters:Dictionary;
 		private var _parameters:Dictionary;
@@ -22,7 +22,7 @@ package com.tbbgc.denom.common.models {
 
 		private var _count:int;
 
-		public function DenomShared( onEnterFrame:Signal, fileManager:DenomFileManager, globalParameters:Dictionary, plugins:Dictionary ) {
+		public function DenomShared( onEnterFrame:Signal, fileManager:IFileManager, globalParameters:Dictionary, plugins:Dictionary ) {
 			_onEnterFrame = onEnterFrame;
 			_fileManager = fileManager;
 			_globalParameters = globalParameters;
@@ -56,7 +56,7 @@ package com.tbbgc.denom.common.models {
 			return _onLoaded;
 		}
 
-		public function get fileManager():DenomFileManager {
+		public function get fileManager():IFileManager {
 			return _fileManager;
 		}
 

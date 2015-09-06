@@ -1,4 +1,6 @@
 package com.tbbgc.denom.common.managers {
+	import com.tbbgc.denom.common.interfaces.IFileManager;
+
 	import org.osflash.signals.Signal;
 
 	import flash.filesystem.File;
@@ -8,7 +10,7 @@ package com.tbbgc.denom.common.managers {
 	/**
 	 * @author simonrodriguez
 	 */
-	public class DenomFileManager {
+	public class DenomFileManager implements IFileManager {
 		private var _base:String;
 
 		private var _onLoad:Signal;
