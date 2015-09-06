@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DenomDioxide Standalone" basedir="." default="build">
+  <property file="build.config"/>
+
+  <property name="deploy.dir" location="../../bin"/>
+  <property name="src.standalone.dir" location="../src_standalone" />
+  <property name="src.common.dir" location="../src_common" />
+  <property name="lib.dir" location="../lib" />
+  <property name="AIR_SDK_HOME" value="${flex.sdk}"/>
+
+  <taskdef resource="flexTasks.tasks" classpath="${flex.sdk}/ant/lib/flexTasks.jar" />
+
+  <target name="build_init">
+    <delete dir="${deploy.dir}" failonerror="false" includeEmptyDirs="true" />
+    <mkdir dir="${deploy.dir}"/>
+  </target>
+
+  <target name="build" depends="build_init" description="Builds the library (.swc file)">
+    <compc output="${deploy.dir}/DenomDioxide.swc">
+      <load-config filename="${flex.sdk}/frameworks/air-config.xml"/>
+      <arg value="-swf-version=26" />
+
+      <include-sources dir="${src.standalone.dir}" includes="*"/>
+      <include-sources dir="${src.common.dir}" includes="*"/>
+
+      <external-library-path file="${lib.dir}/as3-signals-v0.9-BETA.swc" append="true"/>
+    </compc>
+  </target>
+
+</project>

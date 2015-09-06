@@ -7,3 +7,5 @@ denomdioxide/src/com/tbbgc/denom/common
 denomdioxide/src_standalone/com/tbbgc/denom/common
 
 denomdioxide/certs
+
+denomdioxide/build/build.config
